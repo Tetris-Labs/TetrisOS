@@ -12,9 +12,10 @@ type CallbackServer = {
 };
 
 const TWENTY_LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 96 96">
-<rect width="96" height="96" rx="11.3" fill="#000"/>
-<path fill="#fff" d="M19.25 35.75c0-5.25 4.26-9.5 9.5-9.5h18.29c.27 0 .51.16.63.4.11.25.06.54-.12.75l-4.01 4.35c-.7.76-1.68 1.2-2.71 1.2H28.8c-1.57 0-2.85 1.27-2.85 2.85v7.18c0 .93-.75 1.67-1.68 1.67h-3.34c-.93 0-1.67-.75-1.67-1.67v-7.23z"/>
-<path fill="#fff" d="M76.15 60.25c0 5.25-4.26 9.5-9.5 9.5h-7.77c-5.25 0-9.5-4.25-9.5-9.5V46.65c0-.93.35-1.82.98-2.5l4.53-4.92c.19-.2.49-.27.75-.17.26.11.44.36.44.64v20.52c0 1.57 1.28 2.85 2.85 2.85h7.68c1.57 0 2.85-1.28 2.85-2.85V35.8c0-1.57-1.28-2.85-2.85-2.85h-8.93c-1.02 0-2 .43-2.7 1.18L28.35 63.06h16c.92 0 1.67.75 1.67 1.68v3.34c0 .93-.75 1.67-1.67 1.67H22.79c-1.95 0-3.55-1.59-3.55-3.54v-1.77c0-.89.33-1.75.94-2.4l29.86-32.43c1.98-2.15 4.75-3.36 7.67-3.36h8.93c5.25 0 9.5 4.25 9.5 9.5v24.5z"/>
+<rect width="96" height="96" rx="11.3" fill="#8A2BE2"/>
+<!-- Tetris T piece -->
+<rect x="24" y="24" width="48" height="16" fill="#E6E6FA"/>
+<rect x="40" y="40" width="16" height="32" fill="#E6E6FA"/>
 </svg>`;
 
 const pageHtml = ({
@@ -30,7 +31,7 @@ const pageHtml = ({
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${title} — Twenty</title>
+  <title>${title} — TetrisOS</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
