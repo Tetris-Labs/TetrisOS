@@ -1,0 +1,15 @@
+[Unit]
+Description=TetrisOS GitHub Webhook Listener
+After=network.target docker.service
+
+[Service]
+Type=simple
+User=jake
+ExecStart=/usr/bin/python3 /home/jake/TetrisOS/deploy/webhook.py
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

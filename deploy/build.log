@@ -1,0 +1,216 @@
+time="2026-04-01T12:42:22Z" level=warning msg="The \"STORAGE_S3_NAME\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:22Z" level=warning msg="The \"STORAGE_S3_REGION\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:22Z" level=warning msg="The \"STORAGE_S3_ENDPOINT\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:22Z" level=warning msg="The \"DISABLE_CRON_JOBS_REGISTRATION\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:22Z" level=warning msg="The \"STORAGE_S3_ENDPOINT\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:22Z" level=warning msg="The \"DISABLE_DB_MIGRATIONS\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:22Z" level=warning msg="The \"STORAGE_S3_REGION\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:22Z" level=warning msg="The \"STORAGE_S3_NAME\" variable is not set. Defaulting to a blank string."
+ Image tetris-twenty:local Building 
+#1 [internal] load local bake definitions
+#1 reading from stdin 673B done
+#1 DONE 0.0s
+
+#2 [internal] load build definition from Dockerfile
+#2 transferring dockerfile: 10.62kB done
+#2 DONE 0.0s
+
+#3 [internal] load metadata for docker.io/library/node:24-alpine
+#3 DONE 0.6s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 104B done
+#4 DONE 0.0s
+
+#5 [common-deps  1/13] FROM docker.io/library/node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b
+#5 resolve docker.io/library/node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b 0.0s done
+#5 DONE 0.0s
+
+#6 [internal] load build context
+#6 transferring context: 2.29MB 1.8s done
+#6 DONE 2.1s
+
+#7 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
+#7 CACHED
+
+#8 [twenty  3/21] COPY ./packages/twenty-docker/twenty/entrypoint.sh /app/entrypoint.sh
+#8 CACHED
+
+#9 [twenty-front-build 3/6] COPY ./packages/twenty-shared /app/packages/twenty-shared
+#9 CACHED
+
+#10 [twenty  7/21] COPY --chown=1000 --from=twenty-server-build /app/tsconfig.base.json /app/nx.json /app/
+#10 CACHED
+
+#11 [twenty 15/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-emails/package.json /app/packages/twenty-emails/
+#11 CACHED
+
+#12 [twenty-server-build  5/10] COPY ./packages/twenty-server /app/packages/twenty-server
+#12 CACHED
+
+#13 [twenty 10/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server/package.json /app/packages/twenty-server/
+#13 CACHED
+
+#14 [twenty  4/21] RUN chmod +x /app/entrypoint.sh
+#14 CACHED
+
+#15 [common-deps  9/13] COPY ./packages/twenty-ui/package.json /app/packages/twenty-ui/
+#15 CACHED
+
+#16 [common-deps 11/13] COPY ./packages/twenty-front/package.json /app/packages/twenty-front/
+#16 CACHED
+
+#17 [twenty  9/21] COPY --chown=1000 --from=twenty-server-build /app/node_modules /app/node_modules
+#17 CACHED
+
+#18 [common-deps 10/13] COPY ./packages/twenty-shared/package.json /app/packages/twenty-shared/
+#18 CACHED
+
+#19 [common-deps 12/13] COPY ./packages/twenty-sdk/package.json /app/packages/twenty-sdk/
+#19 CACHED
+
+#20 [twenty-front-build 4/6] COPY ./packages/twenty-sdk /app/packages/twenty-sdk
+#20 CACHED
+
+#21 [twenty 18/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-ui/package.json /app/packages/twenty-ui/
+#21 CACHED
+
+#22 [twenty-server-build  2/10] COPY ./packages/twenty-shared /app/packages/twenty-shared
+#22 CACHED
+
+#23 [twenty  6/21] COPY --chown=1000 --from=twenty-server-build /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/
+#23 CACHED
+
+#24 [twenty 14/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-shared/dist /app/packages/twenty-shared/dist
+#24 CACHED
+
+#25 [common-deps  2/13] WORKDIR /app
+#25 CACHED
+
+#26 [common-deps  3/13] COPY ./package.json ./yarn.lock ./.yarnrc.yml ./tsconfig.base.json ./nx.json /app/
+#26 CACHED
+
+#27 [twenty-server-build  1/10] COPY ./packages/twenty-emails /app/packages/twenty-emails
+#27 CACHED
+
+#28 [twenty-server-build  3/10] COPY ./packages/twenty-ui /app/packages/twenty-ui
+#28 CACHED
+
+#29 [twenty 13/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-shared/package.json /app/packages/twenty-shared/
+#29 CACHED
+
+#30 [common-deps  8/13] COPY ./packages/twenty-server/patches /app/packages/twenty-server/patches
+#30 CACHED
+
+#31 [common-deps  6/13] COPY ./packages/twenty-emails/package.json /app/packages/twenty-emails/
+#31 CACHED
+
+#32 [twenty-front-build 1/6] COPY ./packages/twenty-front /app/packages/twenty-front
+#32 CACHED
+
+#33 [twenty 17/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-sdk/package.json /app/packages/twenty-sdk/
+#33 CACHED
+
+#34 [twenty  5/21] WORKDIR /app/packages/twenty-server
+#34 CACHED
+
+#35 [twenty 19/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-front/package.json /app/packages/twenty-front/
+#35 CACHED
+
+#36 [common-deps  5/13] COPY ./.yarn/patches /app/.yarn/patches
+#36 CACHED
+
+#37 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#37 CACHED
+
+#38 [twenty 11/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server/dist /app/packages/twenty-server/dist
+#38 CACHED
+
+#39 [twenty-server-build  7/10] RUN npx nx run twenty-server:build
+#39 CACHED
+
+#40 [twenty 16/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-emails/dist /app/packages/twenty-emails/dist
+#40 CACHED
+
+#41 [twenty-server-build  4/10] COPY ./packages/twenty-sdk /app/packages/twenty-sdk
+#41 CACHED
+
+#42 [twenty-server-build  8/10] RUN npx esbuild packages/twenty-server/scripts/setup-db.ts       --bundle --platform=node --outfile=packages/twenty-server/dist/scripts/setup-db.js       --external:typeorm --external:dotenv --external:pg
+#42 CACHED
+
+#43 [twenty-server-build  9/10] RUN find /app/packages/twenty-server/dist -name '*.d.ts' -delete  && rm -rf /app/packages/twenty-server/dist/packages/twenty-server/test
+#43 CACHED
+
+#44 [twenty  8/21] COPY --chown=1000 --from=twenty-server-build /app/.yarn /app/.yarn
+#44 CACHED
+
+#45 [common-deps  4/13] COPY ./.yarn/releases /app/.yarn/releases
+#45 CACHED
+
+#46 [common-deps  7/13] COPY ./packages/twenty-server/package.json /app/packages/twenty-server/
+#46 CACHED
+
+#47 [twenty-server-build 10/10] RUN yarn workspaces focus --production twenty-emails twenty-shared twenty-sdk twenty-server
+#47 CACHED
+
+#48 [twenty 12/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server/patches /app/packages/twenty-server/patches
+#48 CACHED
+
+#49 [twenty-front-build 2/6] COPY ./packages/twenty-ui /app/packages/twenty-ui
+#49 CACHED
+
+#50 [twenty  2/21] RUN apk add --no-cache curl jq postgresql-client
+#50 CACHED
+
+#51 [twenty-server-build  6/10] RUN npx nx run twenty-server:lingui:extract &&     npx nx run twenty-server:lingui:compile &&     npx nx run twenty-emails:lingui:extract &&     npx nx run twenty-emails:lingui:compile
+#51 CACHED
+
+#52 [common-deps 13/13] RUN yarn && yarn cache clean && npx nx reset
+#52 CACHED
+
+#53 [twenty 20/21] COPY --chown=1000 --from=twenty-front-build /app/packages/twenty-front/build /app/packages/twenty-server/dist/front
+#53 CACHED
+
+#54 [twenty 21/21] RUN mkdir -p /app/.local-storage /app/packages/twenty-server/.local-storage &&     chown 1000:1000 /app/.local-storage /app/packages/twenty-server/.local-storage
+#54 DONE 0.3s
+
+#55 exporting to image
+#55 exporting layers 0.1s done
+#55 exporting manifest sha256:0023852d5328976acbf2dc05a382c631107e0b7a1f4d250ba1a65a00d23a152c done
+#55 exporting config sha256:701918e9f591352b77932175e229fcbb141c4d9a097ad79c8af71f24b77d9715 done
+#55 exporting attestation manifest sha256:8e5145336d698f0b89f2609fa7894dc07e3fac2e7338cabc7b06fe75143f95c5 0.0s done
+#55 exporting manifest list sha256:cfc17e07da755922a9459d8c1483df0a6295a4693797ad16b01b4f5c89bb92cb done
+#55 naming to docker.io/library/tetris-twenty:local
+#55 naming to docker.io/library/tetris-twenty:local done
+#55 unpacking to docker.io/library/tetris-twenty:local 0.0s done
+#55 DONE 0.2s
+
+#56 resolving provenance for metadata file
+#56 DONE 0.0s
+ Image tetris-twenty:local Built 
+time="2026-04-01T12:42:26Z" level=warning msg="The \"DISABLE_DB_MIGRATIONS\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:26Z" level=warning msg="The \"STORAGE_S3_REGION\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:26Z" level=warning msg="The \"DISABLE_CRON_JOBS_REGISTRATION\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:26Z" level=warning msg="The \"STORAGE_S3_NAME\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:26Z" level=warning msg="The \"STORAGE_S3_ENDPOINT\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:26Z" level=warning msg="The \"STORAGE_S3_NAME\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:26Z" level=warning msg="The \"STORAGE_S3_ENDPOINT\" variable is not set. Defaulting to a blank string."
+time="2026-04-01T12:42:26Z" level=warning msg="The \"STORAGE_S3_REGION\" variable is not set. Defaulting to a blank string."
+ Container twenty-redis-1 Running 
+ Container twenty-db-1 Running 
+ Container twenty-server-1 Recreate 
+ Container twenty-server-1 Recreated 
+ Container twenty-worker-1 Recreate 
+ Container twenty-worker-1 Recreated 
+ Container twenty-db-1 Waiting 
+ Container twenty-redis-1 Waiting 
+ Container twenty-db-1 Healthy 
+ Container twenty-redis-1 Healthy 
+ Container twenty-server-1 Starting 
+ Container twenty-server-1 Started 
+ Container twenty-db-1 Waiting 
+ Container twenty-server-1 Waiting 
+ Container twenty-db-1 Healthy 
+ Container twenty-server-1 Healthy 
+ Container twenty-worker-1 Starting 
+ Container twenty-worker-1 Started 
