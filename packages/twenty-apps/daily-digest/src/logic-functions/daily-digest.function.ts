@@ -14,7 +14,7 @@ export default defineLogicFunction({
   timeoutSeconds: 60,
   handler,
   cronTriggerSettings: {
-    // 8:00 AM UTC every day — change and redeploy to adjust
-    pattern: '0 8 * * *',
+    // 7:00 AM New York = 12:00 UTC (EST) / 11:00 UTC (EDT)
+    pattern: '0 12 * * *',
   },
 });

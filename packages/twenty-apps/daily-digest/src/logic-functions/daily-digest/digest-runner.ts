@@ -16,16 +16,10 @@ const shouldSkipEmpty = (): boolean =>
   (process.env.SKIP_EMPTY_DIGESTS ?? 'true').toLowerCase() === 'true';
 
 const getFromEmail = (): string => process.env.EMAIL_FROM ?? 'digest@example.com';
-const getFromName = (): string => process.env.EMAIL_FROM_NAME ?? 'Twenty CRM';
+const getFromName = (): string => process.env.EMAIL_FROM_NAME ?? 'Tetris Digest';
 
 const hasContent = (digest: UserDigest): boolean =>
   digest.tasks.length > 0 || digest.notes.length > 0 || digest.opportunities.length > 0;
-
-// End of today in UTC — used so tasks due today are included
-const endOfTodayIso = (): string => {
-  const todayDate = new Date().toISOString().substring(0, 10);
-  return `${todayDate}T23:59:59.999Z`;
-};
 
 export const runDailyDigest = async (): Promise<DigestResult> => {
   const result: DigestResult = { sent: 0, skipped: 0, errors: [] };
@@ -41,23 +35,25 @@ export const runDailyDigest = async (): Promise<DigestResult> => {
     fetchRecentOpportunities(sinceIso),
   ]);
 
-  const todayEnd = endOfTodayIso();
+  console.log(`Found ${members.length} workspace members to process`);
 
   for (const member of members) {
     // Skip members without a valid email address
     if (!member.userEmail || !member.userEmail.includes('@')) {
+      console.log(`Skipping member ${member.name.firstName} - no valid email`);
       result.skipped++;
       continue;
     }
 
-    // Per-user task query (not done, due on or before end of today)
+    // Fetch all active tasks for this member (assigned to them)
     let tasks;
     try {
-      tasks = await fetchTasksForMember(member.id, todayEnd);
+      tasks = await fetchTasksForMember(member.id);
+      console.log(`Found ${tasks.length} active tasks for ${member.name.firstName}`);
     } catch (err) {
-      result.errors.push(
-        `${member.userEmail} (tasks): ${err instanceof Error ? err.message : String(err)}`,
-      );
+      const errMsg = err instanceof Error ? err.message : String(err);
+      console.error(`Error fetching tasks for ${member.userEmail}: ${errMsg}`);
+      result.errors.push(`${member.userEmail} (tasks): ${errMsg}`);
       result.skipped++;
       continue;
     }
@@ -65,6 +61,7 @@ export const runDailyDigest = async (): Promise<DigestResult> => {
     const digest: UserDigest = { member, tasks, notes, opportunities };
 
     if (shouldSkipEmpty() && !hasContent(digest)) {
+      console.log(`Skipping ${member.userEmail} - no content`);
       result.skipped++;
       continue;
     }
@@ -80,9 +77,12 @@ export const runDailyDigest = async (): Promise<DigestResult> => {
     });
 
     if (sendResult.ok) {
+      console.log(`Sent digest to ${member.userEmail}: ${subject}`);
       result.sent++;
     } else {
-      result.errors.push(`${member.userEmail}: ${sendResult.error}`);
+      const errMsg = sendResult.error;
+      console.error(`Failed to send to ${member.userEmail}: ${errMsg}`);
+      result.errors.push(`${member.userEmail}: ${errMsg}`);
     }
   }
 

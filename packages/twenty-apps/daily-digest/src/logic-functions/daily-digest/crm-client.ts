@@ -63,25 +63,25 @@ export const fetchAllWorkspaceMembers = async (): Promise<WorkspaceMember[]> => 
   return data.workspaceMembers.edges.map((e) => e.node);
 };
 
-// Fetch tasks for a specific workspace member that are not DONE and due on or before end of today.
-// This covers both overdue tasks and tasks due today.
-export const fetchTasksForMember = async (
-  memberId: string,
-  endOfTodayIso: string,
-): Promise<Task[]> => {
+// Fetch all active tasks for a specific workspace member (assignee)
+// Includes: URGENT priority, overdue, due today, due this week, and tasks with no due date
+export const fetchTasksForMember = async (memberId: string): Promise<Task[]> => {
+  // Get all non-DONE, non-CANCELLED tasks assigned to this member
   const data = await gql<TasksResponse>(
     `
-    query FetchTasksForMember($memberId: ID!, $endOfToday: DateTime!) {
+    query FetchTasksForMember($memberId: ID!) {
       tasks(
         filter: {
           and: [
             { assigneeId: { eq: $memberId } }
             { status: { neq: "DONE" } }
-            { dueAt: { lte: $endOfToday } }
-            { dueAt: { is: NOT_NULL } }
+            { status: { neq: "CANCELLED" } }
           ]
         }
-        orderBy: { dueAt: AscNullsLast }
+        orderBy: [
+          { priority: DescNullsLast }
+          { dueAt: AscNullsLast }
+        ]
       ) {
         edges {
           node {
@@ -89,13 +89,14 @@ export const fetchTasksForMember = async (
             title
             status
             dueAt
+            priority
             body
           }
         }
       }
     }
   `,
-    { memberId, endOfToday: endOfTodayIso },
+    { memberId },
   );
   return data.tasks.edges.map((e) => e.node);
 };

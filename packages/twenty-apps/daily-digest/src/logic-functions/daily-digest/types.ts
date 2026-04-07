@@ -26,6 +26,7 @@ export type Task = {
   status: string;
   dueAt: string | null;
   body: string | null;
+  priority: string | null;
 };
 
 export type TasksResponse = {
