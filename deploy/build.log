@@ -1,14 +1,15 @@
-time="2026-04-03T10:59:16Z" level=warning msg="The \"DISABLE_DB_MIGRATIONS\" variable is not set. Defaulting to a blank string."
-time="2026-04-03T10:59:16Z" level=warning msg="The \"DISABLE_CRON_JOBS_REGISTRATION\" variable is not set. Defaulting to a blank string."
-time="2026-04-03T10:59:16Z" level=warning msg="The \"STORAGE_S3_REGION\" variable is not set. Defaulting to a blank string."
-time="2026-04-03T10:59:16Z" level=warning msg="The \"STORAGE_S3_NAME\" variable is not set. Defaulting to a blank string."
-time="2026-04-03T10:59:16Z" level=warning msg="The \"STORAGE_S3_ENDPOINT\" variable is not set. Defaulting to a blank string."
-time="2026-04-03T10:59:16Z" level=warning msg="The \"STORAGE_S3_NAME\" variable is not set. Defaulting to a blank string."
-time="2026-04-03T10:59:16Z" level=warning msg="The \"STORAGE_S3_ENDPOINT\" variable is not set. Defaulting to a blank string."
-time="2026-04-03T10:59:16Z" level=warning msg="The \"STORAGE_S3_REGION\" variable is not set. Defaulting to a blank string."
+time="2026-04-03T11:32:03Z" level=warning msg="The \"DISABLE_DB_MIGRATIONS\" variable is not set. Defaulting to a blank string."
+time="2026-04-03T11:32:03Z" level=warning msg="The \"DISABLE_CRON_JOBS_REGISTRATION\" variable is not set. Defaulting to a blank string."
+time="2026-04-03T11:32:03Z" level=warning msg="The \"STORAGE_S3_REGION\" variable is not set. Defaulting to a blank string."
+time="2026-04-03T11:32:03Z" level=warning msg="The \"STORAGE_S3_NAME\" variable is not set. Defaulting to a blank string."
+time="2026-04-03T11:32:03Z" level=warning msg="The \"STORAGE_S3_ENDPOINT\" variable is not set. Defaulting to a blank string."
+time="2026-04-03T11:32:03Z" level=warning msg="The \"OPENAI_API_KEY\" variable is not set. Defaulting to a blank string."
+time="2026-04-03T11:32:03Z" level=warning msg="The \"STORAGE_S3_ENDPOINT\" variable is not set. Defaulting to a blank string."
+time="2026-04-03T11:32:03Z" level=warning msg="The \"STORAGE_S3_REGION\" variable is not set. Defaulting to a blank string."
+time="2026-04-03T11:32:03Z" level=warning msg="The \"STORAGE_S3_NAME\" variable is not set. Defaulting to a blank string."
  Image tetris-twenty:local Building 
 #1 [internal] load local bake definitions
-#1 reading from stdin 673B done
+#1 reading from stdin 697B done
 #1 DONE 0.0s
 
 #2 [internal] load build definition from Dockerfile
@@ -16,174 +17,991 @@ time="2026-04-03T10:59:16Z" level=warning msg="The \"STORAGE_S3_REGION\" variabl
 #2 DONE 0.0s
 
 #3 [internal] load metadata for docker.io/library/node:24-alpine
-#3 DONE 0.6s
+#3 DONE 0.1s
 
 #4 [internal] load .dockerignore
 #4 transferring context: 104B done
 #4 DONE 0.0s
 
-#5 [common-deps  1/13] FROM docker.io/library/node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b
-#5 resolve docker.io/library/node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b 0.0s done
-#5 DONE 0.0s
+#5 [common-deps  2/13] WORKDIR /app
+#5 CACHED
 
-#6 [internal] load build context
-#6 transferring context: 2.29MB 1.4s done
-#6 DONE 1.5s
+#6 [common-deps  1/13] FROM docker.io/library/node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b
+#6 resolve docker.io/library/node:24-alpine@sha256:01743339035a5c3c11a373cd7c83aeab6ed1457b55da6a69e014a95ac4e4700b 0.0s done
+#6 CACHED
 
-#7 [common-deps  6/13] COPY ./packages/twenty-emails/package.json /app/packages/twenty-emails/
-#7 CACHED
+#7 [internal] load build context
+#7 transferring context: 2.31MB 0.7s done
+#7 DONE 0.7s
 
-#8 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
-#8 CACHED
+#8 [twenty  2/21] RUN apk add --no-cache curl jq postgresql-client
+#8 0.602 ( 1/19) Installing brotli-libs (1.2.0-r0)
+#8 0.619 ( 2/19) Installing c-ares (1.34.6-r0)
+#8 0.627 ( 3/19) Installing libunistring (1.4.1-r0)
+#8 0.655 ( 4/19) Installing libidn2 (2.3.8-r0)
+#8 0.663 ( 5/19) Installing nghttp2-libs (1.68.0-r0)
+#8 0.669 ( 6/19) Installing nghttp3 (1.13.1-r0)
+#8 0.675 ( 7/19) Installing libpsl (0.21.5-r3)
+#8 0.682 ( 8/19) Installing zstd-libs (1.5.7-r2)
+#8 0.694 ( 9/19) Installing libcurl (8.17.0-r1)
+#8 0.706 (10/19) Installing curl (8.17.0-r1)
+#8 ...
 
-#9 [twenty-server-build  1/10] COPY ./packages/twenty-emails /app/packages/twenty-emails
-#9 CACHED
+#9 [common-deps  3/13] COPY ./package.json ./yarn.lock ./.yarnrc.yml ./tsconfig.base.json ./nx.json /app/
+#9 DONE 0.1s
 
-#10 [twenty 16/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-emails/dist /app/packages/twenty-emails/dist
-#10 CACHED
+#8 [twenty  2/21] RUN apk add --no-cache curl jq postgresql-client
+#8 0.717 (11/19) Installing oniguruma (6.9.10-r0)
+#8 0.727 (12/19) Installing jq (1.8.1-r0)
+#8 0.735 (13/19) Installing postgresql-common (1.2-r2)
+#8 0.739   Executing postgresql-common-1.2-r2.pre-install
+#8 0.780 (14/19) Installing lz4-libs (1.10.0-r0)
+#8 0.786 (15/19) Installing libpq (18.3-r0)
+#8 0.797 (16/19) Installing ncurses-terminfo-base (6.5_p20251123-r0)
+#8 0.809 (17/19) Installing libncursesw (6.5_p20251123-r0)
+#8 ...
 
-#11 [common-deps  3/13] COPY ./package.json ./yarn.lock ./.yarnrc.yml ./tsconfig.base.json ./nx.json /app/
-#11 CACHED
+#10 [common-deps  4/13] COPY ./.yarn/releases /app/.yarn/releases
+#10 DONE 0.0s
 
-#12 [common-deps  9/13] COPY ./packages/twenty-ui/package.json /app/packages/twenty-ui/
-#12 CACHED
+#11 [common-deps  5/13] COPY ./.yarn/patches /app/.yarn/patches
+#11 DONE 0.0s
 
-#13 [common-deps  4/13] COPY ./.yarn/releases /app/.yarn/releases
-#13 CACHED
+#12 [common-deps  6/13] COPY ./packages/twenty-emails/package.json /app/packages/twenty-emails/
+#12 DONE 0.0s
 
-#14 [twenty-server-build  2/10] COPY ./packages/twenty-shared /app/packages/twenty-shared
-#14 CACHED
+#13 [common-deps  7/13] COPY ./packages/twenty-server/package.json /app/packages/twenty-server/
+#13 DONE 0.0s
 
-#15 [twenty-front-build 4/6] COPY ./packages/twenty-sdk /app/packages/twenty-sdk
-#15 CACHED
+#8 [twenty  2/21] RUN apk add --no-cache curl jq postgresql-client
+#8 0.818 (18/19) Installing readline (8.3.1-r0)
+#8 0.826 (19/19) Installing postgresql18-client (18.3-r0)
+#8 0.863 Executing busybox-1.37.0-r30.trigger
+#8 0.870 Executing postgresql-common-1.2-r2.trigger
+#8 0.875 * Setting postgresql18 as the default version
+#8 0.966 * WARNING: opening from cache https://dl-cdn.alpinelinux.org/alpine/v3.23/main/x86_64/APKINDEX.tar.gz: No such file or directory
+#8 0.966 * WARNING: opening from cache https://dl-cdn.alpinelinux.org/alpine/v3.23/community/x86_64/APKINDEX.tar.gz: No such file or directory
+#8 0.975 OK: 21.3 MiB in 37 packages
+#8 DONE 1.0s
 
-#16 [common-deps 13/13] RUN yarn && yarn cache clean && npx nx reset
-#16 CACHED
+#14 [common-deps  8/13] COPY ./packages/twenty-server/patches /app/packages/twenty-server/patches
+#14 DONE 0.0s
 
-#17 [twenty-server-build  5/10] COPY ./packages/twenty-server /app/packages/twenty-server
-#17 CACHED
+#15 [common-deps  9/13] COPY ./packages/twenty-ui/package.json /app/packages/twenty-ui/
+#15 DONE 0.0s
 
-#18 [twenty 10/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server/package.json /app/packages/twenty-server/
-#18 CACHED
+#16 [common-deps 10/13] COPY ./packages/twenty-shared/package.json /app/packages/twenty-shared/
+#16 DONE 0.0s
 
-#19 [twenty-server-build  3/10] COPY ./packages/twenty-ui /app/packages/twenty-ui
-#19 CACHED
+#17 [common-deps 11/13] COPY ./packages/twenty-front/package.json /app/packages/twenty-front/
+#17 DONE 0.0s
 
-#20 [twenty-server-build  8/10] RUN npx esbuild packages/twenty-server/scripts/setup-db.ts       --bundle --platform=node --outfile=packages/twenty-server/dist/scripts/setup-db.js       --external:typeorm --external:dotenv --external:pg
-#20 CACHED
+#18 [twenty  3/21] COPY ./packages/twenty-docker/twenty/entrypoint.sh /app/entrypoint.sh
+#18 DONE 0.0s
 
-#21 [twenty 18/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-ui/package.json /app/packages/twenty-ui/
-#21 CACHED
+#19 [common-deps 12/13] COPY ./packages/twenty-sdk/package.json /app/packages/twenty-sdk/
+#19 DONE 0.0s
 
-#22 [twenty-server-build  6/10] RUN npx nx run twenty-server:lingui:extract &&     npx nx run twenty-server:lingui:compile &&     npx nx run twenty-emails:lingui:extract &&     npx nx run twenty-emails:lingui:compile
-#22 CACHED
+#20 [common-deps 13/13] RUN yarn && yarn cache clean && npx nx reset
+#20 ...
 
-#23 [twenty  6/21] COPY --chown=1000 --from=twenty-server-build /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/
-#23 CACHED
+#21 [twenty  4/21] RUN chmod +x /app/entrypoint.sh
+#21 DONE 0.2s
 
-#24 [twenty 19/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-front/package.json /app/packages/twenty-front/
-#24 CACHED
+#22 [twenty  5/21] WORKDIR /app/packages/twenty-server
+#22 DONE 0.0s
 
-#25 [twenty  3/21] COPY ./packages/twenty-docker/twenty/entrypoint.sh /app/entrypoint.sh
-#25 CACHED
+#20 [common-deps 13/13] RUN yarn && yarn cache clean && npx nx reset
+#20 1.085 ➤ YN0000: · Yarn 4.9.2
+#20 1.095 ➤ YN0000: ┌ Resolution step
+#20 28.97 ➤ YN0085: │ - @0no-co/graphql.web@npm:1.1.1, @alcalzone/ansi-tokenize@npm:0.2.2, @algolia/autocomplete-core@npm:1.9.3, and 1018 more.
+#20 29.17 ➤ YN0000: └ Completed in 28s 73ms
+#20 29.17 ➤ YN0000: ┌ Post-resolution validation
+#20 29.17 ➤ YN0060: │ @envelop/core is listed by your project with version 4.0.3 (p1c83a), which doesn't satisfy what @envelop/on-resolve requests (^5.0.0).
+#20 29.17 ➤ YN0060: │ @graphiql/react is listed by your project with version 0.23.0 (pc4333), which doesn't satisfy what @graphiql/plugin-explorer requests (~0.20.4).
+#20 29.17 ➤ YN0060: │ @nestjs/common is listed by your project with version 11.1.16 (p60764), which doesn't satisfy what @graphql-yoga/nestjs and other dependencies request (but they have non-overlapping ranges!).
+#20 29.17 ➤ YN0060: │ @nestjs/core is listed by your project with version 11.1.16 (p7a89f), which doesn't satisfy what @graphql-yoga/nestjs and other dependencies request (but they have non-overlapping ranges!).
+#20 29.17 ➤ YN0060: │ @nestjs/typeorm is listed by your project with version 11.0.0 (p88a19), which doesn't satisfy what @ptc-org/nestjs-query-typeorm and other dependencies request (^10.0.0).
+#20 29.17 ➤ YN0060: │ @ptc-org/nestjs-query-core is listed by your project with version 4.4.0 (p64638), which doesn't satisfy what @ptc-org/nestjs-query-typeorm requests (4.2.0).
+#20 29.17 ➤ YN0060: │ @tiptap/core is listed by your project with version 3.4.2 (pe30bc), which doesn't satisfy what @tiptap/extension-image and other dependencies request (^3.14.0).
+#20 29.17 ➤ YN0060: │ @wyw-in-js/babel-preset is listed by your project with version 1.0.6 (p28082), which doesn't satisfy what next-with-linaria requests (<1.0.0-0).
+#20 29.17 ➤ YN0060: │ express is listed by your project with version 4.22.1 (pb027e), which doesn't satisfy what @nestjs/serve-static requests (^5.0.1).
+#20 29.17 ➤ YN0060: │ googleapis is listed by your project with version 105.0.0 (pd1234), which doesn't satisfy what @jrmdayn/googleapis-batcher requests (>=109.0.0).
+#20 29.17 ➤ YN0060: │ graphql is listed by your project with version 16.8.1 (pee078), which doesn't satisfy what graphiql-explorer (via @graphiql/plugin-explorer) and other dependencies request (but they have non-overlapping ranges!).
+#20 29.17 ➤ YN0060: │ react is listed by your project with version 19.2.4 (pe786e), which doesn't satisfy what @remote-dom/react and other dependencies request (but they have non-overlapping ranges!).
+#20 29.17 ➤ YN0060: │ react-hook-form is listed by your project with version 7.52.2 (pf89b0), which doesn't satisfy what @hookform/resolvers requests (^7.55.0).
+#20 29.17 ➤ YN0060: │ reflect-metadata is listed by your project with version 0.2.2 (p8a9bd), which doesn't satisfy what @ptc-org/nestjs-query-typeorm and other dependencies request (0.1.13).
+#20 29.17 ➤ YN0002: │ twenty-emails@workspace:packages/twenty-emails [d24c7] doesn't provide @tiptap/pm (p2947a), requested by @tiptap/core.
+#20 29.17 ➤ YN0002: │ twenty-emails@workspace:packages/twenty-emails [d24c7] doesn't provide typescript (pb9db6), requested by vite-plugin-dts.
+#20 29.17 ➤ YN0002: │ twenty-emails@workspace:packages/twenty-emails [d24c7] doesn't provide vite (p6dfa0), requested by @lingui/vite-plugin and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-emails@workspace:packages/twenty-emails doesn't provide @tiptap/pm (pa7bc2), requested by @tiptap/core.
+#20 29.17 ➤ YN0002: │ twenty-emails@workspace:packages/twenty-emails doesn't provide react (pac803), requested by @lingui/react.
+#20 29.17 ➤ YN0002: │ twenty-emails@workspace:packages/twenty-emails doesn't provide typescript (p26195), requested by vite-plugin-dts.
+#20 29.17 ➤ YN0002: │ twenty-emails@workspace:packages/twenty-emails doesn't provide vite (pa1cb9), requested by @lingui/vite-plugin and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-front@workspace:packages/twenty-front doesn't provide @tiptap/pm (p39162), requested by @tiptap/core and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-front@workspace:packages/twenty-front doesn't provide @types/react (p3d667), requested by @ai-sdk/react and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-front@workspace:packages/twenty-front doesn't provide @types/react-dom (p3226e), requested by @apollo/client and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-front@workspace:packages/twenty-front doesn't provide react (pd36df), requested by @ai-sdk/react and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-front@workspace:packages/twenty-front doesn't provide react-dom (p66e11), requested by @apollo/client and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-front@workspace:packages/twenty-front doesn't provide rxjs (p6ac3c), requested by @apollo/client and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-front@workspace:packages/twenty-front doesn't provide vite (p33cb8), requested by @lingui/vite-plugin and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-front@workspace:packages/twenty-front doesn't provide zod (p5cbb5), requested by ai.
+#20 29.17 ➤ YN0002: │ twenty-sdk@workspace:packages/twenty-sdk doesn't provide monaco-editor (p21502), requested by twenty-ui.
+#20 29.17 ➤ YN0002: │ twenty-sdk@workspace:packages/twenty-sdk doesn't provide prettier (pb6e32), requested by @prettier/sync and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-sdk@workspace:packages/twenty-sdk doesn't provide vitest (pacdd2), requested by @storybook/addon-vitest and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @apollo/gateway (pc2c97), requested by @ptc-org/nestjs-query-graphql.
+#20 29.17 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @babel/core (pcdd5f), requested by @babel/preset-env.
+#20 29.17 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @opentelemetry/core (p86380), requested by @opentelemetry/auto-instrumentations-node.
+#20 29.17 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @types/inquirer (pb95bf), requested by nest-commander.
+#20 29.17 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @types/react-dom (p6b1f2), requested by @blocknote/server-util and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide esbuild (p79636), requested by @esbuild-plugins/node-modules-polyfill.
+#20 29.17 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide ts-morph (pc2108), requested by @nestjs/graphql and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide typescript (p92d01), requested by @nestjs/schematics.
+#20 29.17 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide vite (pef850), requested by @lingui/vite-plugin and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-shared@workspace:packages/twenty-shared doesn't provide @babel/core (p39150), requested by @babel/preset-env.
+#20 29.17 ➤ YN0002: │ twenty-shared@workspace:packages/twenty-shared doesn't provide prettier (pb3eaa), requested by @prettier/sync.
+#20 29.17 ➤ YN0002: │ twenty-shared@workspace:packages/twenty-shared doesn't provide react (p12935), requested by react-router-dom.
+#20 29.17 ➤ YN0002: │ twenty-shared@workspace:packages/twenty-shared doesn't provide react-dom (p4a4c2), requested by react-router-dom.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui [8bbfd] doesn't provide @babel/core (p6c3b6), requested by @babel/preset-env and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui [8bbfd] doesn't provide prettier (p8f7a5), requested by @prettier/sync.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui [8bbfd] doesn't provide typescript (p33849), requested by vite-plugin-checker and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui [8bbfd] doesn't provide vite (pea656), requested by vite-plugin-checker and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui [ac1a7] doesn't provide @babel/core (p7389f), requested by @babel/preset-env and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui [ac1a7] doesn't provide prettier (p93ed0), requested by @prettier/sync.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui [ac1a7] doesn't provide typescript (pf4988), requested by vite-plugin-checker and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui [ac1a7] doesn't provide vite (pa9394), requested by vite-plugin-checker and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui doesn't provide @babel/core (p35d82), requested by @babel/preset-env and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui doesn't provide monaco-editor (p231c0), requested by @monaco-editor/react.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui doesn't provide prettier (pff696), requested by @prettier/sync.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui doesn't provide typescript (pb9675), requested by vite-plugin-checker and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty-ui@workspace:packages/twenty-ui doesn't provide vite (pb920e), requested by vite-plugin-checker and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty@workspace:. doesn't provide @babel/runtime (p01f2d), requested by next-with-linaria.
+#20 29.17 ➤ YN0002: │ twenty@workspace:. doesn't provide @wyw-in-js/transform (pe2fb7), requested by next-with-linaria.
+#20 29.17 ➤ YN0002: │ twenty@workspace:. doesn't provide graphql (peb3fc), requested by @apollo/client and other dependencies.
+#20 29.17 ➤ YN0002: │ twenty@workspace:. doesn't provide graphql-tag (p9cf99), requested by @graphql-codegen/typescript-react-apollo.
+#20 29.17 ➤ YN0002: │ twenty@workspace:. doesn't provide playwright (p91d7b), requested by @vitest/browser-playwright.
+#20 29.17 ➤ YN0002: │ twenty@workspace:. doesn't provide webpack (p16bcb), requested by raw-loader and other dependencies.
+#20 29.17 ➤ YN0086: │ Some peer dependencies are incorrectly met by your project; run yarn explain peer-requirements <hash> for details, where <hash> is the six-letter p-prefixed code.
+#20 29.17 ➤ YN0086: │ Some peer dependencies are incorrectly met by dependencies; run yarn explain peer-requirements for details.
+#20 29.17 ➤ YN0000: └ Completed
+#20 29.17 ➤ YN0000: ┌ Fetch step
+#20 61.54 ➤ YN0013: │ 4075 packages were added to the project (+ 2.2 GiB).
+#20 61.54 ➤ YN0000: └ Completed in 32s 364ms
+#20 61.71 ➤ YN0000: ┌ Link step
+#20 106.7 ➤ YN0007: │ @swc/core@npm:1.15.18 [0915e] must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ esbuild@npm:0.25.10 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ msw@npm:2.12.7 [0915e] must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ esbuild@npm:0.27.2 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ esbuild@npm:0.25.8 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ core-js@npm:3.40.0 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ esbuild@npm:0.21.5 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ @nestjs/core@npm:11.1.16 [d24c7] must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ bcrypt@npm:5.1.1 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ sharp@npm:0.32.6 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ unrs-resolver@npm:1.11.1 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ sharp@npm:0.34.5 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ protobufjs@npm:7.5.3 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ @sentry-internal/node-cpu-profiler@npm:2.2.0 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ @apollo/protobufjs@npm:1.2.6 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ msgpackr-extract@npm:3.0.3 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ esbuild@npm:0.25.5 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ canvas@npm:3.1.0 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ vue-demi@npm:0.14.10 [74204] must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ core-js-pure@npm:3.46.0 must be built because it never has been before or the last one failed
+#20 106.7 ➤ YN0007: │ @apollo/protobufjs@npm:1.2.7 must be built because it never has been before or the last one failed
+#20 110.4 ➤ YN0009: │ canvas@npm:3.1.0 couldn't be built successfully (exit code 1, logs can be found here: /tmp/xfs-c41603d3/build.log)
+#20 111.2 ➤ YN0007: │ nx@npm:22.5.4 [0915e] must be built because it never has been before or the last one failed
+#20 111.7 ➤ YN0000: └ Completed in 50s 27ms
+#20 112.5 ➤ YN0000: · Done with warnings in 1m 52s
+#20 114.2 ➤ YN0000: Done in 0s 141ms
+#20 115.2 
+#20 115.2  NX   Resetting the Nx cache and stopping the daemon.
+#20 115.2 
+#20 115.2 
+#20 115.2 
+#20 115.2  NX   Successfully reset the Nx workspace.
+#20 115.2 
+#20 115.2 npm notice
+#20 115.2 npm notice New minor version of npm available! 11.11.0 -> 11.12.1
+#20 115.2 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.12.1
+#20 115.2 npm notice To update run: npm install -g npm@11.12.1
+#20 115.2 npm notice
+#20 DONE 115.8s
 
-#26 [twenty  4/21] RUN chmod +x /app/entrypoint.sh
-#26 CACHED
+#23 [twenty-front-build 1/6] COPY ./packages/twenty-front /app/packages/twenty-front
+#23 ...
 
-#27 [twenty 17/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-sdk/package.json /app/packages/twenty-sdk/
-#27 CACHED
+#24 [twenty-server-build  1/10] COPY ./packages/twenty-emails /app/packages/twenty-emails
+#24 DONE 3.7s
 
-#28 [common-deps  2/13] WORKDIR /app
-#28 CACHED
+#25 [twenty-server-build  2/10] COPY ./packages/twenty-shared /app/packages/twenty-shared
+#25 DONE 0.8s
 
-#29 [common-deps 11/13] COPY ./packages/twenty-front/package.json /app/packages/twenty-front/
-#29 CACHED
+#23 [twenty-front-build 1/6] COPY ./packages/twenty-front /app/packages/twenty-front
+#23 ...
 
-#30 [twenty 11/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server/dist /app/packages/twenty-server/dist
-#30 CACHED
+#26 [twenty-server-build  3/10] COPY ./packages/twenty-ui /app/packages/twenty-ui
+#26 DONE 0.3s
 
-#31 [twenty-server-build  9/10] RUN find /app/packages/twenty-server/dist -name '*.d.ts' -delete  && rm -rf /app/packages/twenty-server/dist/packages/twenty-server/test
-#31 CACHED
+#27 [twenty-server-build  4/10] COPY ./packages/twenty-sdk /app/packages/twenty-sdk
+#27 DONE 0.3s
 
-#32 [twenty-front-build 3/6] COPY ./packages/twenty-shared /app/packages/twenty-shared
-#32 CACHED
+#23 [twenty-front-build 1/6] COPY ./packages/twenty-front /app/packages/twenty-front
+#23 ...
 
-#33 [twenty  5/21] WORKDIR /app/packages/twenty-server
-#33 CACHED
+#28 [twenty-server-build  5/10] COPY ./packages/twenty-server /app/packages/twenty-server
+#28 ...
 
-#34 [twenty-front-build 1/6] COPY ./packages/twenty-front /app/packages/twenty-front
-#34 CACHED
+#23 [twenty-front-build 1/6] COPY ./packages/twenty-front /app/packages/twenty-front
+#23 DONE 9.0s
 
-#35 [common-deps  5/13] COPY ./.yarn/patches /app/.yarn/patches
-#35 CACHED
+#28 [twenty-server-build  5/10] COPY ./packages/twenty-server /app/packages/twenty-server
+#28 DONE 3.8s
 
-#36 [twenty  7/21] COPY --chown=1000 --from=twenty-server-build /app/tsconfig.base.json /app/nx.json /app/
-#36 CACHED
+#29 [twenty-server-build  6/10] RUN npx nx run twenty-server:lingui:extract &&     npx nx run twenty-server:lingui:compile &&     npx nx run twenty-emails:lingui:extract &&     npx nx run twenty-emails:lingui:compile
+#29 ...
 
-#37 [twenty 13/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-shared/package.json /app/packages/twenty-shared/
-#37 CACHED
+#30 [twenty-front-build 2/6] COPY ./packages/twenty-ui /app/packages/twenty-ui
+#30 DONE 0.3s
 
-#38 [common-deps 10/13] COPY ./packages/twenty-shared/package.json /app/packages/twenty-shared/
-#38 CACHED
+#31 [twenty-front-build 3/6] COPY ./packages/twenty-shared /app/packages/twenty-shared
+#31 DONE 0.1s
 
-#39 [twenty-server-build  7/10] RUN npx nx run twenty-server:build
-#39 CACHED
+#29 [twenty-server-build  6/10] RUN npx nx run twenty-server:lingui:extract &&     npx nx run twenty-server:lingui:compile &&     npx nx run twenty-emails:lingui:extract &&     npx nx run twenty-emails:lingui:compile
+#29 ...
 
-#40 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
-#40 CACHED
+#32 [twenty-front-build 4/6] COPY ./packages/twenty-sdk /app/packages/twenty-sdk
+#32 DONE 0.1s
 
-#41 [twenty 20/21] COPY --chown=1000 --from=twenty-front-build /app/packages/twenty-front/build /app/packages/twenty-server/dist/front
-#41 CACHED
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 ...
 
-#42 [common-deps 12/13] COPY ./packages/twenty-sdk/package.json /app/packages/twenty-sdk/
-#42 CACHED
+#29 [twenty-server-build  6/10] RUN npx nx run twenty-server:lingui:extract &&     npx nx run twenty-server:lingui:compile &&     npx nx run twenty-emails:lingui:extract &&     npx nx run twenty-emails:lingui:compile
+#29 14.06 
+#29 14.06  NX   Running target lingui:extract for project twenty-server and 3 tasks it depends on:
+#29 14.06 
+#29 14.06 
+#29 16.27 
+#29 16.27 > nx run twenty-shared:generateBarrels
+#29 16.27 
+#29 16.27 > tsx packages/twenty-shared/scripts/generateBarrels.ts
+#29 16.27 
+#29 ...
 
-#43 [twenty-server-build  4/10] COPY ./packages/twenty-sdk /app/packages/twenty-sdk
-#43 CACHED
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 14.45 
+#33 14.45  NX   Running target lingui:extract for project twenty-front and 5 tasks it depends on:
+#33 14.45 
+#33 14.45 
+#33 16.81 
+#33 16.81 > nx run twenty-shared:generateBarrels
+#33 16.81 
+#33 16.81 > tsx packages/twenty-shared/scripts/generateBarrels.ts
+#33 16.81 
+#33 17.23 
+#33 17.23 > nx run twenty-ui:generateBarrels
+#33 17.23 
+#33 17.23 > tsx packages/twenty-ui/scripts/generateBarrels.ts
+#33 17.23 
+#33 ...
 
-#44 [twenty  2/21] RUN apk add --no-cache curl jq postgresql-client
-#44 CACHED
+#29 [twenty-server-build  6/10] RUN npx nx run twenty-server:lingui:extract &&     npx nx run twenty-server:lingui:compile &&     npx nx run twenty-emails:lingui:extract &&     npx nx run twenty-emails:lingui:compile
+#29 21.70 
+#29 21.70 > nx run twenty-shared:build
+#29 21.70 
+#29 21.70 > npx vite build
+#29 21.70 
+#29 21.70 > tsgo -p tsconfig.lib.json --declaration --emitDeclarationOnly --noEmit false --outDir dist --rootDir src && npx tsc-alias -p tsconfig.lib.json --outDir dist
+#29 21.70 
+#29 31.55 
+#29 31.55 > nx run twenty-emails:build
+#29 31.55 
+#29 31.55 > npx vite build
+#29 31.55 
+#29 31.55 [36mvite v7.1.12 [32mbuilding for production...[36m[39m
+#29 31.55 transforming...
+#29 31.55 [32m✓[39m 1010 modules transformed.
+#29 31.55 rendering chunks...
+#29 31.55 [2mdist/[22m[36mlocales/generated/zh-CN.mjs      [39m[1m[2m  3.98 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/zh-TW.mjs      [39m[1m[2m  4.03 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/en.mjs         [39m[1m[2m  4.13 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/fi-FI.mjs      [39m[1m[2m  4.21 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/af-ZA.mjs      [39m[1m[2m  4.29 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/no-NO.mjs      [39m[1m[2m  4.30 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/da-DK.mjs      [39m[1m[2m  4.32 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/nl-NL.mjs      [39m[1m[2m  4.34 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/sv-SE.mjs      [39m[1m[2m  4.34 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/pt-BR.mjs      [39m[1m[2m  4.35 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/pt-PT.mjs      [39m[1m[2m  4.36 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/it-IT.mjs      [39m[1m[2m  4.40 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/pl-PL.mjs      [39m[1m[2m  4.46 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/tr-TR.mjs      [39m[1m[2m  4.47 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/cs-CZ.mjs      [39m[1m[2m  4.48 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/de-DE.mjs      [39m[1m[2m  4.48 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ro-RO.mjs      [39m[1m[2m  4.49 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ca-ES.mjs      [39m[1m[2m  4.51 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ko-KR.mjs      [39m[1m[2m  4.51 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/fr-FR.mjs      [39m[1m[2m  4.53 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/es-ES.mjs      [39m[1m[2m  4.54 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/hu-HU.mjs      [39m[1m[2m  4.58 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/he-IL.mjs      [39m[1m[2m  4.68 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ja-JP.mjs      [39m[1m[2m  4.73 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/vi-VN.mjs      [39m[1m[2m  4.93 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ar-SA.mjs      [39m[1m[2m  5.11 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/pseudo-en.mjs  [39m[1m[2m  5.40 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/sr-Cyrl.mjs    [39m[1m[2m  5.52 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/uk-UA.mjs      [39m[1m[2m  5.77 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/el-GR.mjs      [39m[1m[2m  6.14 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ru-RU.mjs      [39m[1m[2m  6.39 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mindex.mjs                        [39m[1m[33m869.30 kB[39m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/zh-CN.js      [39m[1m[2m  4.05 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/zh-TW.js      [39m[1m[2m  4.10 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/en.js         [39m[1m[2m  4.20 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/fi-FI.js      [39m[1m[2m  4.28 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/af-ZA.js      [39m[1m[2m  4.36 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/no-NO.js      [39m[1m[2m  4.37 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/da-DK.js      [39m[1m[2m  4.39 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/nl-NL.js      [39m[1m[2m  4.41 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/sv-SE.js      [39m[1m[2m  4.41 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/pt-BR.js      [39m[1m[2m  4.42 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/pt-PT.js      [39m[1m[2m  4.43 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/it-IT.js      [39m[1m[2m  4.47 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/pl-PL.js      [39m[1m[2m  4.53 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/tr-TR.js      [39m[1m[2m  4.54 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/cs-CZ.js      [39m[1m[2m  4.55 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/de-DE.js      [39m[1m[2m  4.55 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ro-RO.js      [39m[1m[2m  4.56 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ca-ES.js      [39m[1m[2m  4.58 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ko-KR.js      [39m[1m[2m  4.58 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/fr-FR.js      [39m[1m[2m  4.60 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/es-ES.js      [39m[1m[2m  4.60 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/hu-HU.js      [39m[1m[2m  4.65 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/he-IL.js      [39m[1m[2m  4.75 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ja-JP.js      [39m[1m[2m  4.80 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/vi-VN.js      [39m[1m[2m  5.00 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ar-SA.js      [39m[1m[2m  5.18 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/pseudo-en.js  [39m[1m[2m  5.46 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/sr-Cyrl.js    [39m[1m[2m  5.59 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/uk-UA.js      [39m[1m[2m  5.84 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/el-GR.js      [39m[1m[2m  6.21 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mlocales/generated/ru-RU.js      [39m[1m[2m  6.46 kB[22m[1m[22m
+#29 31.55 [2mdist/[22m[36mindex.js                        [39m[1m[33m642.46 kB[39m[22m
+#29 31.55 [32m✓ built in 7.02s[39m
+#29 31.55 > tsgo -p tsconfig.lib.json --declaration --emitDeclarationOnly --outDir dist --rootDir src --composite false && npx tsc-alias -p tsconfig.lib.json --outDir dist
+#29 31.55 
+#29 31.57 
+#29 31.57 > nx run twenty-server:"lingui:extract"
+#29 31.57 
+#29 31.57 > lingui extract --overwrite --clean
+#29 31.57 
+#29 ...
 
-#45 [common-deps  8/13] COPY ./packages/twenty-server/patches /app/packages/twenty-server/patches
-#45 CACHED
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 22.09 
+#33 22.09 > nx run twenty-shared:build
+#33 22.09 
+#33 22.09 > npx vite build
+#33 22.09 
+#33 22.09 > tsgo -p tsconfig.lib.json --declaration --emitDeclarationOnly --noEmit false --outDir dist --rootDir src && npx tsc-alias -p tsconfig.lib.json --outDir dist
+#33 22.09 
+#33 ...
 
-#46 [common-deps  7/13] COPY ./packages/twenty-server/package.json /app/packages/twenty-server/
-#46 CACHED
+#29 [twenty-server-build  6/10] RUN npx nx run twenty-server:lingui:extract &&     npx nx run twenty-server:lingui:compile &&     npx nx run twenty-emails:lingui:extract &&     npx nx run twenty-emails:lingui:compile
+#29 46.51 [32m✔[39m 
+#29 46.51 Catalog statistics for src/engine/core-modules/i18n/locales/{locale}: 
+#29 46.52 ┌─────────────┬─────────────┬─────────┐
+#29 46.52 │ Language    │ Total count │ Missing │
+#29 46.52 ├─────────────┼─────────────┼─────────┤
+#29 46.52 │ [1men[22m (source) │    1005     │    -    │
+#29 46.52 │ af-ZA       │    1005     │   382   │
+#29 46.52 │ ar-SA       │    1005     │   383   │
+#29 46.52 │ ca-ES       │    1005     │   383   │
+#29 46.52 │ cs-CZ       │    1005     │   384   │
+#29 46.52 │ da-DK       │    1005     │   381   │
+#29 46.52 │ de-DE       │    1005     │   372   │
+#29 46.52 │ el-GR       │    1005     │   382   │
+#29 46.52 │ es-ES       │    1005     │   378   │
+#29 46.52 │ fi-FI       │    1005     │   386   │
+#29 46.52 │ fr-FR       │    1005     │   385   │
+#29 46.52 │ he-IL       │    1005     │   383   │
+#29 46.52 │ hu-HU       │    1005     │   384   │
+#29 46.52 │ it-IT       │    1005     │   382   │
+#29 46.52 │ ja-JP       │    1005     │   297   │
+#29 46.52 │ ko-KR       │    1005     │   381   │
+#29 46.52 │ nl-NL       │    1005     │   381   │
+#29 46.52 │ no-NO       │    1005     │   382   │
+#29 46.52 │ pl-PL       │    1005     │   383   │
+#29 46.52 │ pt-BR       │    1005     │   382   │
+#29 46.52 │ pt-PT       │    1005     │   382   │
+#29 46.52 │ ro-RO       │    1005     │   393   │
+#29 46.52 │ ru-RU       │    1005     │   383   │
+#29 46.52 │ sr-Cyrl     │    1005     │   383   │
+#29 46.52 │ sv-SE       │    1005     │   384   │
+#29 46.52 │ tr-TR       │    1005     │   384   │
+#29 46.52 │ uk-UA       │    1005     │   383   │
+#29 46.52 │ vi-VN       │    1005     │   382   │
+#29 46.52 │ zh-CN       │    1005     │   382   │
+#29 46.52 │ zh-TW       │    1005     │   385   │
+#29 46.52 └─────────────┴─────────────┴─────────┘
+#29 46.52 
+#29 46.52 (Use "[33mnpm run extract[39m" to update catalogs with new messages.)
+#29 46.52 (Use "[33mnpm run compile[39m" to compile catalogs for production. Alternatively, use bundler plugins: https://lingui.dev/ref/cli#compiling-catalogs-in-ci)
+#29 46.60 
+#29 46.60 
+#29 46.60 
+#29 46.60  NX   Successfully ran target lingui:extract for project twenty-server and 3 tasks it depends on
+#29 46.60 
+#29 46.60 
+#29 48.34 
+#29 48.35  NX   Running target lingui:compile for project twenty-server and 3 tasks it depends on:
+#29 48.35 
+#29 48.35 
+#29 48.38 
+#29 48.38 > nx run twenty-shared:generateBarrels  [existing outputs match the cache, left as is]
+#29 48.38 
+#29 48.42 
+#29 48.42 > nx run twenty-shared:build  [existing outputs match the cache, left as is]
+#29 48.42 
+#29 48.46 
+#29 48.46 > nx run twenty-emails:build  [existing outputs match the cache, left as is]
+#29 48.46 
+#29 48.47 
+#29 48.47 > nx run twenty-server:"lingui:compile"
+#29 48.47 
+#29 48.47 > lingui compile --typescript
+#29 48.47 
+#29 49.15 Compiling message catalogs…
+#29 ...
 
-#47 [twenty-server-build 10/10] RUN yarn workspaces focus --production twenty-emails twenty-shared twenty-sdk twenty-server
-#47 CACHED
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 59.60 
+#33 59.60 > nx run twenty-ui:build
+#33 59.60 
+#33 59.60 [linaria/wyw] Starting CSS pre-build
+#33 59.60 [linaria/wyw] Pre-warm: 586ms ⚠️  slow
+#33 59.60 
+#33 59.60 [linaria/wyw] ===== CSS PRE-BUILD SUMMARY =====
+#33 59.60 [linaria/wyw] Files transformed: 109
+#33 59.60 [linaria/wyw] Files skipped (no @linaria): 6989
+#33 59.60 [linaria/wyw] Transform time: 3572ms
+#33 59.60 [linaria/wyw] Avg per transformed file: 32.8ms
+#33 59.60 [linaria/wyw] ==========================================
+#33 59.60 
+#33 ...
 
-#48 [twenty 14/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-shared/dist /app/packages/twenty-shared/dist
-#48 CACHED
+#29 [twenty-server-build  6/10] RUN npx nx run twenty-server:lingui:extract &&     npx nx run twenty-server:lingui:compile &&     npx nx run twenty-emails:lingui:extract &&     npx nx run twenty-emails:lingui:compile
+#29 64.14 Done!
+#29 64.20 
+#29 64.20 
+#29 64.20 
+#29 64.20  NX   Successfully ran target lingui:compile for project twenty-server and 3 tasks it depends on
+#29 64.20 
+#29 64.20 Nx read the output from the cache instead of running the command for 3 out of 4 tasks.
+#29 64.20 
+#29 65.58 
+#29 65.58  NX   Running target lingui:extract for project twenty-emails and 2 tasks it depends on:
+#29 65.58 
+#29 65.59 
+#29 65.63 
+#29 65.63 > nx run twenty-shared:generateBarrels  [existing outputs match the cache, left as is]
+#29 65.63 
+#29 65.66 
+#29 65.66 > nx run twenty-shared:build  [existing outputs match the cache, left as is]
+#29 65.66 
+#29 65.68 
+#29 65.68 > nx run twenty-emails:"lingui:extract"
+#29 65.68 
+#29 65.68 > lingui extract --overwrite --clean
+#29 65.68 
+#29 67.08 [32m✔[39m 
+#29 67.08 Catalog statistics for src/locales/{locale}: 
+#29 67.08 ┌─────────────┬─────────────┬─────────┐
+#29 67.08 │ Language    │ Total count │ Missing │
+#29 67.08 ├─────────────┼─────────────┼─────────┤
+#29 67.08 │ [1men[22m (source) │     39      │    -    │
+#29 67.08 │ af-ZA       │     39      │   13    │
+#29 67.08 │ ar-SA       │     39      │   13    │
+#29 67.08 │ ca-ES       │     39      │   14    │
+#29 67.08 │ cs-CZ       │     39      │   13    │
+#29 67.08 │ da-DK       │     39      │   13    │
+#29 67.08 │ de-DE       │     39      │   13    │
+#29 67.08 │ el-GR       │     39      │   13    │
+#29 67.08 │ es-ES       │     39      │   11    │
+#29 67.08 │ fi-FI       │     39      │   13    │
+#29 67.08 │ fr-FR       │     39      │   13    │
+#29 67.08 │ he-IL       │     39      │   13    │
+#29 67.08 │ hu-HU       │     39      │   13    │
+#29 67.08 │ it-IT       │     39      │   13    │
+#29 67.08 │ ja-JP       │     39      │   13    │
+#29 67.08 │ ko-KR       │     39      │   13    │
+#29 67.08 │ nl-NL       │     39      │   13    │
+#29 67.08 │ no-NO       │     39      │   13    │
+#29 67.08 │ pl-PL       │     39      │   13    │
+#29 67.08 │ pt-BR       │     39      │   11    │
+#29 67.08 │ pt-PT       │     39      │   13    │
+#29 67.08 │ ro-RO       │     39      │   13    │
+#29 67.08 │ ru-RU       │     39      │   11    │
+#29 67.08 │ sr-Cyrl     │     39      │   13    │
+#29 67.08 │ sv-SE       │     39      │   13    │
+#29 67.08 │ tr-TR       │     39      │   13    │
+#29 67.08 │ uk-UA       │     39      │   13    │
+#29 67.08 │ vi-VN       │     39      │   13    │
+#29 67.08 │ zh-CN       │     39      │   13    │
+#29 67.08 │ zh-TW       │     39      │   13    │
+#29 67.08 └─────────────┴─────────────┴─────────┘
+#29 67.08 
+#29 67.08 (Use "[33mnpm run extract[39m" to update catalogs with new messages.)
+#29 67.08 (Use "[33mnpm run compile[39m" to compile catalogs for production. Alternatively, use bundler plugins: https://lingui.dev/ref/cli#compiling-catalogs-in-ci)
+#29 67.11 
+#29 67.11 
+#29 67.11 
+#29 67.11  NX   Successfully ran target lingui:extract for project twenty-emails and 2 tasks it depends on
+#29 67.11 
+#29 67.11 Nx read the output from the cache instead of running the command for 2 out of 3 tasks.
+#29 67.11 
+#29 68.03 
+#29 68.03  NX   Running target lingui:compile for project twenty-emails and 2 tasks it depends on:
+#29 68.03 
+#29 68.03 
+#29 68.07 
+#29 68.07 > nx run twenty-shared:generateBarrels  [existing outputs match the cache, left as is]
+#29 68.07 
+#29 68.10 
+#29 68.10 > nx run twenty-shared:build  [existing outputs match the cache, left as is]
+#29 68.10 
+#29 68.12 
+#29 68.12 > nx run twenty-emails:"lingui:compile"
+#29 68.12 
+#29 68.12 > lingui compile --typescript
+#29 68.12 
+#29 68.75 Compiling message catalogs…
+#29 69.42 Done!
+#29 69.45 
+#29 69.45 
+#29 69.45 
+#29 69.45  NX   Successfully ran target lingui:compile for project twenty-emails and 2 tasks it depends on
+#29 69.45 
+#29 69.45 Nx read the output from the cache instead of running the command for 2 out of 3 tasks.
+#29 69.45 
+#29 DONE 69.6s
 
-#49 [twenty 12/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server/patches /app/packages/twenty-server/patches
-#49 CACHED
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 ...
 
-#50 [twenty  9/21] COPY --chown=1000 --from=twenty-server-build /app/node_modules /app/node_modules
-#50 CACHED
+#34 [twenty-server-build  7/10] RUN npx nx run twenty-server:build
+#34 2.846 
+#34 2.848  NX   Running target build for project twenty-server and 3 tasks it depends on:
+#34 2.848 
+#34 2.848 
+#34 2.948 
+#34 2.948 > nx run twenty-shared:generateBarrels  [local cache]
+#34 2.948 
+#34 3.905 
+#34 3.906 > nx run twenty-shared:build  [local cache]
+#34 3.906 
+#34 ...
 
-#51 [twenty 15/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-emails/package.json /app/packages/twenty-emails/
-#51 CACHED
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 79.99 
+#33 79.99 > nx run twenty-sdk:build
+#33 79.99 
+#33 79.99 > npx rimraf dist && npx vite build -c vite.config.node.ts && npx vite build -c vite.config.browser.ts && npx vite build -c vite.config.sdk.ts
+#33 79.99 
+#33 79.99 > tsgo -p tsconfig.lib.json --declaration --emitDeclarationOnly --noEmit false --outDir dist --rootDir src && npx tsc-alias -p tsconfig.lib.json --outDir dist
+#33 79.99 
+#33 80.04 
+#33 80.04 > nx run twenty-front:"lingui:extract"
+#33 80.04 
+#33 80.04 > lingui extract --overwrite --clean
+#33 80.04 
+#33 81.55 Browserslist: browsers data (caniuse-lite) is 8 months old. Please run:
+#33 81.55   npx update-browserslist-db@latest
+#33 81.55   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+#33 ...
 
-#52 [twenty  8/21] COPY --chown=1000 --from=twenty-server-build /app/.yarn /app/.yarn
-#52 CACHED
+#34 [twenty-server-build  7/10] RUN npx nx run twenty-server:build
+#34 11.87 
+#34 11.87 > nx run twenty-emails:build
+#34 11.87 
+#34 11.87 > npx vite build
+#34 11.87 
+#34 11.87 [36mvite v7.1.12 [32mbuilding for production...[36m[39m
+#34 11.87 transforming...
+#34 11.87 [32m✓[39m 1010 modules transformed.
+#34 11.87 rendering chunks...
+#34 11.87 [2mdist/[22m[36mlocales/generated/zh-CN.mjs      [39m[1m[2m  3.93 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/zh-TW.mjs      [39m[1m[2m  3.96 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/en.mjs         [39m[1m[2m  4.04 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/fi-FI.mjs      [39m[1m[2m  4.09 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/af-ZA.mjs      [39m[1m[2m  4.14 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/da-DK.mjs      [39m[1m[2m  4.16 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/no-NO.mjs      [39m[1m[2m  4.16 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/nl-NL.mjs      [39m[1m[2m  4.17 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/pt-BR.mjs      [39m[1m[2m  4.18 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/pt-PT.mjs      [39m[1m[2m  4.20 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/sv-SE.mjs      [39m[1m[2m  4.21 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/it-IT.mjs      [39m[1m[2m  4.23 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/tr-TR.mjs      [39m[1m[2m  4.24 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/cs-CZ.mjs      [39m[1m[2m  4.24 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/de-DE.mjs      [39m[1m[2m  4.26 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/pl-PL.mjs      [39m[1m[2m  4.27 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ro-RO.mjs      [39m[1m[2m  4.28 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ko-KR.mjs      [39m[1m[2m  4.32 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ca-ES.mjs      [39m[1m[2m  4.32 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/hu-HU.mjs      [39m[1m[2m  4.32 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/fr-FR.mjs      [39m[1m[2m  4.34 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/es-ES.mjs      [39m[1m[2m  4.35 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/he-IL.mjs      [39m[1m[2m  4.38 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ja-JP.mjs      [39m[1m[2m  4.49 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/vi-VN.mjs      [39m[1m[2m  4.65 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ar-SA.mjs      [39m[1m[2m  4.71 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/sr-Cyrl.mjs    [39m[1m[2m  4.96 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/uk-UA.mjs      [39m[1m[2m  5.11 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/pseudo-en.mjs  [39m[1m[2m  5.28 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/el-GR.mjs      [39m[1m[2m  5.33 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ru-RU.mjs      [39m[1m[2m  5.70 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mindex.mjs                        [39m[1m[33m869.30 kB[39m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/zh-CN.js      [39m[1m[2m  4.00 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/zh-TW.js      [39m[1m[2m  4.03 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/en.js         [39m[1m[2m  4.11 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/fi-FI.js      [39m[1m[2m  4.16 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/af-ZA.js      [39m[1m[2m  4.21 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/da-DK.js      [39m[1m[2m  4.23 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/no-NO.js      [39m[1m[2m  4.23 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/nl-NL.js      [39m[1m[2m  4.24 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/pt-BR.js      [39m[1m[2m  4.25 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/pt-PT.js      [39m[1m[2m  4.26 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/sv-SE.js      [39m[1m[2m  4.28 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/it-IT.js      [39m[1m[2m  4.30 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/tr-TR.js      [39m[1m[2m  4.31 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/cs-CZ.js      [39m[1m[2m  4.31 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/de-DE.js      [39m[1m[2m  4.33 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/pl-PL.js      [39m[1m[2m  4.34 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ro-RO.js      [39m[1m[2m  4.35 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ko-KR.js      [39m[1m[2m  4.39 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ca-ES.js      [39m[1m[2m  4.39 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/hu-HU.js      [39m[1m[2m  4.39 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/fr-FR.js      [39m[1m[2m  4.41 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/es-ES.js      [39m[1m[2m  4.42 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/he-IL.js      [39m[1m[2m  4.45 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ja-JP.js      [39m[1m[2m  4.56 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/vi-VN.js      [39m[1m[2m  4.72 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ar-SA.js      [39m[1m[2m  4.77 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/sr-Cyrl.js    [39m[1m[2m  5.03 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/uk-UA.js      [39m[1m[2m  5.17 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/pseudo-en.js  [39m[1m[2m  5.34 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/el-GR.js      [39m[1m[2m  5.40 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mlocales/generated/ru-RU.js      [39m[1m[2m  5.77 kB[22m[1m[22m
+#34 11.87 [2mdist/[22m[36mindex.js                        [39m[1m[33m642.46 kB[39m[22m
+#34 11.87 [32m✓ built in 5.09s[39m
+#34 11.87 > tsgo -p tsconfig.lib.json --declaration --emitDeclarationOnly --outDir dist --rootDir src --composite false && npx tsc-alias -p tsconfig.lib.json --outDir dist
+#34 11.87 
+#34 11.90 
+#34 11.90 > nx run twenty-server:build
+#34 11.90 
+#34 11.90 > rimraf dist
+#34 11.90 
+#34 11.98 > nest build --path ./tsconfig.build.json
+#34 11.98 
+#34 13.08 [36m> [39m[46m[1m SWC [22m[49m [36mRunning...[39m
+#34 29.84 Successfully compiled: 5236 files with swc (760.69ms)
+#34 31.87 
+#34 31.87 
+#34 31.87 
+#34 31.87  NX   Successfully ran target build for project twenty-server and 3 tasks it depends on
+#34 31.87 
+#34 31.87 Nx read the output from the cache instead of running the command for 2 out of 4 tasks.
+#34 31.87 
+#34 DONE 32.6s
 
-#53 [twenty-front-build 2/6] COPY ./packages/twenty-ui /app/packages/twenty-ui
-#53 CACHED
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 ...
 
-#54 [twenty 21/21] RUN mkdir -p /app/.local-storage /app/packages/twenty-server/.local-storage &&     chown 1000:1000 /app/.local-storage /app/packages/twenty-server/.local-storage
-#54 CACHED
+#35 [twenty-server-build  8/10] RUN npx esbuild packages/twenty-server/scripts/setup-db.ts       --bundle --platform=node --outfile=packages/twenty-server/dist/scripts/setup-db.js       --external:typeorm --external:dotenv --external:pg
+#35 0.882 
+#35 0.882   packages/twenty-server/dist/scripts/setup-db.js  3.3kb
+#35 0.882 
+#35 0.882 ⚡ Done in 15ms
+#35 DONE 0.9s
 
-#55 exporting to image
-#55 exporting layers done
-#55 exporting manifest sha256:2340e4193d06e1f76919d753ed5ad30d6f2a07c4da2288db394645010ba33fb2 done
-#55 exporting config sha256:74630a2cd5e0c424b3560a70b1547d9eb8fc2a6a904aa42889a0fb8fc96f2426 done
-#55 exporting attestation manifest sha256:f612694d8bb9b2f6070269b7112c8cf4ae06f79bab258aabe765cb7cea35a223 0.0s done
-#55 exporting manifest list sha256:a102f2a9f8bb051ca7e1027f56f2769a593023c2586f68a14020db3d7ec85120 done
-#55 naming to docker.io/library/tetris-twenty:local done
-#55 unpacking to docker.io/library/tetris-twenty:local 0.0s done
-#55 DONE 0.1s
+#36 [twenty-server-build  9/10] RUN find /app/packages/twenty-server/dist -name '*.d.ts' -delete  && rm -rf /app/packages/twenty-server/dist/packages/twenty-server/test
+#36 DONE 0.4s
 
-#56 resolving provenance for metadata file
-#56 DONE 0.0s
- Image tetris-twenty:local Built 
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 ...
+
+#37 [twenty-server-build 10/10] RUN yarn workspaces focus --production twenty-emails twenty-shared twenty-sdk twenty-server
+#37 1.211 ➤ YN0000: · Yarn 4.9.2
+#37 1.221 ➤ YN0000: ┌ Resolution step
+#37 1.505 ➤ YN0085: │ - @adobe/css-tools@npm:4.4.0, @ai-sdk/react@npm:3.0.99, @angular-devkit/core@npm:19.2.17, @angular-devkit/core@npm:19.2.19, and 2313 more.
+#37 1.598 ➤ YN0000: └ Completed in 0s 378ms
+#37 1.600 ➤ YN0000: ┌ Post-resolution validation
+#37 1.601 ➤ YN0060: │ @envelop/core is listed by your project with version 4.0.3 (p1c83a), which doesn't satisfy what @envelop/on-resolve requests (^5.0.0).
+#37 1.601 ➤ YN0060: │ @nestjs/common is listed by your project with version 11.1.16 (p60764), which doesn't satisfy what @graphql-yoga/nestjs and other dependencies request (but they have non-overlapping ranges!).
+#37 1.601 ➤ YN0060: │ @nestjs/core is listed by your project with version 11.1.16 (p7a89f), which doesn't satisfy what @graphql-yoga/nestjs and other dependencies request (but they have non-overlapping ranges!).
+#37 1.601 ➤ YN0060: │ @nestjs/typeorm is listed by your project with version 11.0.0 (p88a19), which doesn't satisfy what @ptc-org/nestjs-query-typeorm and other dependencies request (^10.0.0).
+#37 1.602 ➤ YN0060: │ @ptc-org/nestjs-query-core is listed by your project with version 4.4.0 (p64638), which doesn't satisfy what @ptc-org/nestjs-query-typeorm requests (4.2.0).
+#37 1.602 ➤ YN0060: │ express is listed by your project with version 4.22.1 (pb027e), which doesn't satisfy what @nestjs/serve-static requests (^5.0.1).
+#37 1.602 ➤ YN0060: │ googleapis is listed by your project with version 105.0.0 (pd1234), which doesn't satisfy what @jrmdayn/googleapis-batcher requests (>=109.0.0).
+#37 1.603 ➤ YN0060: │ react is listed by your project with version 19.2.4 (pe786e), which doesn't satisfy what @remote-dom/react and other dependencies request (but they have non-overlapping ranges!).
+#37 1.603 ➤ YN0060: │ reflect-metadata is listed by your project with version 0.2.2 (p8a9bd), which doesn't satisfy what @ptc-org/nestjs-query-typeorm and other dependencies request (0.1.13).
+#37 1.603 ➤ YN0002: │ twenty-emails@workspace:packages/twenty-emails doesn't provide react (pac803), requested by @lingui/react.
+#37 1.604 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @apollo/gateway (pc2c97), requested by @ptc-org/nestjs-query-graphql.
+#37 1.604 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @babel/core (pcdd5f), requested by @babel/preset-env.
+#37 1.604 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @opentelemetry/core (p86380), requested by @opentelemetry/auto-instrumentations-node.
+#37 1.604 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @types/inquirer (pb95bf), requested by nest-commander.
+#37 1.604 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @types/react (pe9c83), requested by @blocknote/server-util and other dependencies.
+#37 1.604 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide @types/react-dom (p6b1f2), requested by @blocknote/server-util and other dependencies.
+#37 1.604 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide esbuild (p79636), requested by @esbuild-plugins/node-modules-polyfill.
+#37 1.604 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide ts-morph (pc2108), requested by @nestjs/graphql and other dependencies.
+#37 1.604 ➤ YN0002: │ twenty-server@workspace:packages/twenty-server doesn't provide vite (pef850), requested by @lingui/vite-plugin and other dependencies.
+#37 1.604 ➤ YN0002: │ twenty-shared@workspace:packages/twenty-shared doesn't provide react (p12935), requested by react-router-dom.
+#37 1.604 ➤ YN0002: │ twenty-shared@workspace:packages/twenty-shared doesn't provide react-dom (p4a4c2), requested by react-router-dom.
+#37 1.604 ➤ YN0086: │ Some peer dependencies are incorrectly met by your project; run yarn explain peer-requirements <hash> for details, where <hash> is the six-letter p-prefixed code.
+#37 1.604 ➤ YN0086: │ Some peer dependencies are incorrectly met by dependencies; run yarn explain peer-requirements for details.
+#37 1.605 ➤ YN0000: └ Completed
+#37 1.605 ➤ YN0000: ┌ Fetch step
+#37 ...
+
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 104.0 [32m✔[39m 
+#33 104.0 Catalog statistics for src/locales/{locale}: 
+#33 104.1 ┌─────────────┬─────────────┬─────────┐
+#33 104.1 │ Language    │ Total count │ Missing │
+#33 104.1 ├─────────────┼─────────────┼─────────┤
+#33 104.1 │ [1men[22m (source) │    2903     │    -    │
+#33 104.1 │ af-ZA       │    2903     │   826   │
+#33 104.1 │ ar-SA       │    2903     │   828   │
+#33 104.1 │ ca-ES       │    2903     │   824   │
+#33 104.1 │ cs-CZ       │    2903     │   824   │
+#33 104.1 │ da-DK       │    2903     │   823   │
+#33 104.1 │ de-DE       │    2903     │   826   │
+#33 104.1 │ el-GR       │    2903     │   823   │
+#33 104.1 │ es-ES       │    2903     │   764   │
+#33 104.1 │ fi-FI       │    2903     │   822   │
+#33 104.1 │ fr-FR       │    2903     │   825   │
+#33 104.1 │ he-IL       │    2903     │   827   │
+#33 104.1 │ hu-HU       │    2903     │   823   │
+#33 104.1 │ it-IT       │    2903     │   828   │
+#33 104.1 │ ja-JP       │    2903     │   822   │
+#33 104.1 │ ko-KR       │    2903     │   822   │
+#33 104.1 │ nl-NL       │    2903     │   823   │
+#33 104.1 │ no-NO       │    2903     │   836   │
+#33 104.1 │ pl-PL       │    2903     │   830   │
+#33 104.1 │ pt-BR       │    2903     │   800   │
+#33 104.1 │ pt-PT       │    2903     │   823   │
+#33 104.1 │ ro-RO       │    2903     │   824   │
+#33 104.1 │ ru-RU       │    2903     │   745   │
+#33 104.1 │ sr-Cyrl     │    2903     │   828   │
+#33 104.1 │ sv-SE       │    2903     │   821   │
+#33 104.1 │ tr-TR       │    2903     │   821   │
+#33 104.1 │ uk-UA       │    2903     │   824   │
+#33 104.1 │ vi-VN       │    2903     │   822   │
+#33 104.1 │ zh-CN       │    2903     │   833   │
+#33 104.1 │ zh-TW       │    2903     │   824   │
+#33 104.1 └─────────────┴─────────────┴─────────┘
+#33 104.1 
+#33 104.1 (Use "[33mnpm run extract[39m" to update catalogs with new messages.)
+#33 104.1 (Use "[33mnpm run compile[39m" to compile catalogs for production. Alternatively, use bundler plugins: https://lingui.dev/ref/cli#compiling-catalogs-in-ci)
+#33 104.2 
+#33 104.2 
+#33 104.2 
+#33 104.2  NX   Successfully ran target lingui:extract for project twenty-front and 5 tasks it depends on
+#33 104.2 
+#33 104.2 
+#33 105.4 
+#33 105.4  NX   Running target lingui:compile for project twenty-front and 5 tasks it depends on:
+#33 105.4 
+#33 105.4 
+#33 105.5 
+#33 105.5 > nx run twenty-shared:generateBarrels  [existing outputs match the cache, left as is]
+#33 105.5 
+#33 105.5 
+#33 105.5 > nx run twenty-shared:build  [existing outputs match the cache, left as is]
+#33 105.5 
+#33 107.5 
+#33 107.5 > nx run twenty-ui:generateBarrels
+#33 107.5 
+#33 107.5 > tsx packages/twenty-ui/scripts/generateBarrels.ts
+#33 107.5 
+#33 ...
+
+#37 [twenty-server-build 10/10] RUN yarn workspaces focus --production twenty-emails twenty-shared twenty-sdk twenty-server
+#37 14.80 ➤ YN0013: │ 1903 packages were added to the project (+ 885.82 MiB).
+#37 14.80 ➤ YN0000: └ Completed in 13s 198ms
+#37 14.80 ➤ YN0000: ┌ Link step
+#37 ...
+
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 140.4 
+#33 140.4 > nx run twenty-ui:build
+#33 140.4 
+#33 140.4 [linaria/wyw] Starting CSS pre-build
+#33 140.4 [linaria/wyw] Pre-warm: 536ms ⚠️  slow
+#33 140.4 
+#33 140.4 [linaria/wyw] ===== CSS PRE-BUILD SUMMARY =====
+#33 140.4 [linaria/wyw] Files transformed: 109
+#33 140.4 [linaria/wyw] Files skipped (no @linaria): 6989
+#33 140.4 [linaria/wyw] Transform time: 2998ms
+#33 140.4 [linaria/wyw] Avg per transformed file: 27.5ms
+#33 140.4 [linaria/wyw] ==========================================
+#33 140.4 
+#33 157.4 
+#33 157.4 > nx run twenty-sdk:build
+#33 157.4 
+#33 157.4 > npx rimraf dist && npx vite build -c vite.config.node.ts && npx vite build -c vite.config.browser.ts && npx vite build -c vite.config.sdk.ts
+#33 157.4 
+#33 157.4 > tsgo -p tsconfig.lib.json --declaration --emitDeclarationOnly --noEmit false --outDir dist --rootDir src && npx tsc-alias -p tsconfig.lib.json --outDir dist
+#33 157.4 
+#33 157.5 
+#33 157.5 > nx run twenty-front:"lingui:compile"
+#33 157.5 
+#33 157.5 > lingui compile --typescript
+#33 157.5 
+#33 158.4 Compiling message catalogs…
+#33 ...
+
+#37 [twenty-server-build 10/10] RUN yarn workspaces focus --production twenty-emails twenty-shared twenty-sdk twenty-server
+#37 67.80 ➤ YN0008: │ esbuild@npm:0.25.8 must be rebuilt because its dependency tree changed
+#37 67.80 ➤ YN0008: │ @nestjs/core@npm:11.1.16 [d24c7] must be rebuilt because its dependency tree changed
+#37 67.80 ➤ YN0008: │ bcrypt@npm:5.1.1 must be rebuilt because its dependency tree changed
+#37 67.80 ➤ YN0008: │ sharp@npm:0.32.6 must be rebuilt because its dependency tree changed
+#37 68.38 ➤ YN0000: └ Completed in 53s 572ms
+#37 68.59 ➤ YN0000: · Done with warnings in 1m 8s
+#37 DONE 69.3s
+
+#33 [twenty-front-build 5/6] RUN npx nx run twenty-front:lingui:extract &&     npx nx run twenty-front:lingui:compile
+#33 191.0 Done!
+#33 191.1 
+#33 191.1 
+#33 191.1 
+#33 191.1  NX   Successfully ran target lingui:compile for project twenty-front and 5 tasks it depends on
+#33 191.1 
+#33 191.1 Nx read the output from the cache instead of running the command for 2 out of 6 tasks.
+#33 191.1 
+#33 DONE 191.3s
+
+#38 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
+#38 4.281 
+#38 4.281  NX   Running target build for project twenty-front and 5 tasks it depends on:
+#38 4.282 
+#38 4.283 
+#38 4.388 
+#38 4.388 > nx run twenty-shared:generateBarrels  [local cache]
+#38 4.388 
+#38 5.170 
+#38 5.170 > nx run twenty-shared:build  [local cache]
+#38 5.170 
+#38 6.377 
+#38 6.377 > nx run twenty-ui:generateBarrels
+#38 6.377 
+#38 6.377 > tsx packages/twenty-ui/scripts/generateBarrels.ts
+#38 6.377 
+#38 37.80 
+#38 37.80 > nx run twenty-ui:build
+#38 37.80 
+#38 37.80 [linaria/wyw] Starting CSS pre-build
+#38 37.80 [linaria/wyw] Pre-warm: 533ms ⚠️  slow
+#38 37.80 
+#38 37.80 [linaria/wyw] ===== CSS PRE-BUILD SUMMARY =====
+#38 37.80 [linaria/wyw] Files transformed: 109
+#38 37.80 [linaria/wyw] Files skipped (no @linaria): 6989
+#38 37.80 [linaria/wyw] Transform time: 3249ms
+#38 37.80 [linaria/wyw] Avg per transformed file: 29.8ms
+#38 37.80 [linaria/wyw] ==========================================
+#38 37.80 
+#38 ...
+
+#39 [twenty  6/21] COPY --chown=1000 --from=twenty-server-build /app/package.json /app/yarn.lock /app/.yarnrc.yml /app/
+#39 DONE 0.1s
+
+#38 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
+#38 ...
+
+#40 [twenty  7/21] COPY --chown=1000 --from=twenty-server-build /app/tsconfig.base.json /app/nx.json /app/
+#40 DONE 0.0s
+
+#41 [twenty  8/21] COPY --chown=1000 --from=twenty-server-build /app/.yarn /app/.yarn
+#41 DONE 0.1s
+
+#42 [twenty  9/21] COPY --chown=1000 --from=twenty-server-build /app/node_modules /app/node_modules
+#42 ...
+
+#38 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
+#38 55.37 
+#38 55.37 > nx run twenty-sdk:build
+#38 55.37 
+#38 55.37 > npx rimraf dist && npx vite build -c vite.config.node.ts && npx vite build -c vite.config.browser.ts && npx vite build -c vite.config.sdk.ts
+#38 55.37 
+#38 55.37 > tsgo -p tsconfig.lib.json --declaration --emitDeclarationOnly --noEmit false --outDir dist --rootDir src && npx tsc-alias -p tsconfig.lib.json --outDir dist
+#38 55.37 
+#38 55.43 
+#38 55.43 > nx run twenty-front:build
+#38 55.43 
+#38 58.12 [36mvite v7.1.12 [32mbuilding for production...[36m[39m
+#38 58.14 [linaria/wyw] Starting CSS pre-build
+#38 58.23 Browserslist: browsers data (caniuse-lite) is 8 months old. Please run:
+#38 58.23   npx update-browserslist-db@latest
+#38 58.23   Why you should do it regularly: https://github.com/browserslist/update-db#readme
+#38 58.54 [linaria/wyw] Pre-warm: 404ms
+#38 60.81 transforming...
+#38 60.99 [33m../../node_modules/react-helmet-async/lib/index.module.js (1:7186): A comment
+#38 60.99 "/*#__PURE__*/"
+#38 60.99 in "../../node_modules/react-helmet-async/lib/index.module.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.[39m
+#38 60.99 [33m../../node_modules/react-helmet-async/lib/index.module.js (1:13561): A comment
+#38 60.99 "/*#__PURE__*/"
+#38 60.99 in "../../node_modules/react-helmet-async/lib/index.module.js" contains an annotation that Rollup cannot interpret due to the position of the comment. The comment will be removed to avoid issues.[39m
+#38 95.57 [33m[plugin vite:resolve] Module "module" has been externalized for browser compatibility, imported by "/app/node_modules/typescript/lib/typescript.js". See https://vite.dev/guide/troubleshooting.html#module-externalized-for-browser-compatibility for more details.[39m
+#38 ...
+
+#42 [twenty  9/21] COPY --chown=1000 --from=twenty-server-build /app/node_modules /app/node_modules
+#42 DONE 53.6s
+
+#43 [twenty 10/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server/package.json /app/packages/twenty-server/
+#43 DONE 3.7s
+
+#38 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
+#38 ...
+
+#44 [twenty 11/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server/dist /app/packages/twenty-server/dist
+#44 DONE 5.8s
+
+#38 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
+#38 ...
+
+#45 [twenty 12/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-server/patches /app/packages/twenty-server/patches
+#45 DONE 0.2s
+
+#38 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
+#38 ...
+
+#46 [twenty 13/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-shared/package.json /app/packages/twenty-shared/
+#46 DONE 0.0s
+
+#47 [twenty 14/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-shared/dist /app/packages/twenty-shared/dist
+#47 DONE 0.5s
+
+#38 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
+#38 ...
+
+#48 [twenty 15/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-emails/package.json /app/packages/twenty-emails/
+#48 DONE 0.1s
+
+#49 [twenty 16/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-emails/dist /app/packages/twenty-emails/dist
+#49 DONE 0.1s
+
+#50 [twenty 17/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-sdk/package.json /app/packages/twenty-sdk/
+#50 DONE 0.0s
+
+#51 [twenty 18/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-ui/package.json /app/packages/twenty-ui/
+#51 DONE 0.0s
+
+#52 [twenty 19/21] COPY --chown=1000 --from=twenty-server-build /app/packages/twenty-front/package.json /app/packages/twenty-front/
+#52 DONE 0.0s
+
+#38 [twenty-front-build 6/6] RUN if [ -d /app/packages/twenty-front/build ]; then       echo "Using pre-built frontend from host";     else       NODE_OPTIONS="--max-old-space-size=8192" npx nx build twenty-front;     fi
+#38 170.2 [32m✓[39m 16130 modules transformed.
+#38 185.5 rendering chunks...
+#38 195.9 [33m[plugin vite:reporter] 
+#38 195.9 (!)  /app/node_modules/cron-parser/dist/index.js?commonjs-es-import is dynamically imported by /app/packages/twenty-front/src/modules/workflow/workflow-trigger/components/WorkflowEditTriggerCronForm.tsx but also statically imported by /app/packages/twenty-front/src/modules/workflow/workflow-trigger/components/CronExpressionHelper.tsx, /app/packages/twenty-front/src/modules/workflow/workflow-trigger/utils/cron-to-human/utils/parseCronExpression.ts, dynamic import will not move module into another chunk.
+#38 195.9 [39m
