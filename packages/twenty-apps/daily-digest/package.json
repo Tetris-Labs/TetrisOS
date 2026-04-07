@@ -1,0 +1,23 @@
+{
+  "name": "daily-digest",
+  "version": "0.1.0",
+  "license": "MIT",
+  "engines": {
+    "node": "^24.5.0",
+    "npm": "please-use-yarn",
+    "yarn": ">=4.0.2"
+  },
+  "scripts": {
+    "twenty": "twenty",
+    "dev": "twenty dev"
+  },
+  "dependencies": {
+    "nodemailer": "^6.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.7.2",
+    "@types/nodemailer": "^6.4.0",
+    "twenty-sdk": "0.6.4",
+    "typescript": "^5.9.3"
+  }
+}
