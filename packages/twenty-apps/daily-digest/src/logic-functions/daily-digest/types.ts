@@ -40,7 +40,7 @@ export type Note = {
   id: string;
   title: string | null;
   createdAt: string;
-  body: { markdown: string | null } | null;
+  bodyV2: { markdown: string | null } | null;
 };
 
 export type NotesResponse = {

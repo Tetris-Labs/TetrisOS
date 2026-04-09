@@ -116,7 +116,7 @@ export const fetchRecentNotes = async (sinceIso: string): Promise<Note[]> => {
             id
             title
             createdAt
-            body { markdown }
+            bodyV2 { markdown }
           }
         }
       }
