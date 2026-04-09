@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import {
   fetchAllWorkspaceMembers,
   fetchRecentNotes,
@@ -8,15 +10,34 @@ import { renderDigestEmail } from './email-renderer';
 import { sendEmail } from './email-sender';
 import type { DigestResult, UserDigest } from './types';
 
-declare const process: { env: Record<string, string | undefined> };
+declare const process: { env: Record<string, string | undefined>; cwd: () => string };
 
-const getLookbackHours = (): number => Number(process.env.LOOKBACK_HOURS ?? '24');
+// Load app config from env vars OR from config file at known server path
+const getAppConfigDir = (): Record<string, string> => {
+  // Try config file at known server path or relative to cwd
+  const possiblePaths = [
+    path.join(process.cwd(), 'src', 'logic-functions', 'app-config.json'),
+    '/app/packages/twenty-server/.local-storage/a79acd45-9d8d-42a4-b383-36371deaa6cb/c52865dd-39ca-47f0-ad8b-bc30c22fe16f/built-logic-function/src/logic-functions/app-config.json',
+    '/tmp/logic-function-executor/built-logic-function/src/logic-functions/app-config.json',
+  ];
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) return JSON.parse(fs.readFileSync(p, 'utf-8'));
+  }
+  return {
+    LOOKBACK_HOURS: process.env.LOOKBACK_HOURS ?? '24',
+    SKIP_EMPTY_DIGESTS: process.env.SKIP_EMPTY_DIGESTS ?? 'true',
+    EMAIL_FROM: process.env.EMAIL_FROM ?? 'digest@example.com',
+    EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME ?? 'Tetris Digest',
+  };
+};
+
+const getLookbackHours = (): number => Number(getAppConfigDir().LOOKBACK_HOURS ?? '24');
 
 const shouldSkipEmpty = (): boolean =>
-  (process.env.SKIP_EMPTY_DIGESTS ?? 'true').toLowerCase() === 'true';
+  getAppConfigDir().SKIP_EMPTY_DIGESTS?.toLowerCase() === 'true';
 
-const getFromEmail = (): string => process.env.EMAIL_FROM ?? 'digest@example.com';
-const getFromName = (): string => process.env.EMAIL_FROM_NAME ?? 'Tetris Digest';
+const getFromEmail = (): string => getAppConfigDir().EMAIL_FROM ?? 'digest@example.com';
+const getFromName = (): string => getAppConfigDir().EMAIL_FROM_NAME ?? 'Tetris Digest';
 
 const hasContent = (digest: UserDigest): boolean =>
   digest.tasks.length > 0 || digest.notes.length > 0 || digest.opportunities.length > 0;

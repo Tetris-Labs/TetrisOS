@@ -1,6 +1,35 @@
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import path from 'path';
 
-declare const process: { env: Record<string, string | undefined> };
+declare const process: { env: Record<string, string | undefined>; cwd: () => string };
+
+// Load SMTP config from env vars OR from a config file
+const getSmtpConfig = (): { host: string; port: number; secure: boolean; user?: string; pass?: string } => {
+  // Try env vars first
+  const host = process.env.SMTP_HOST ?? '';
+  if (host) {
+    return {
+      host,
+      port: Number(process.env.SMTP_PORT ?? '587'),
+      secure: process.env.SMTP_SECURE === 'true',
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
+    };
+  }
+  // Try config file fallback at known server path
+  const possiblePaths = [
+    path.join(process.cwd(), 'src', 'logic-functions', 'smtp-config.json'),
+    '/app/packages/twenty-server/.local-storage/a79acd45-9d8d-42a4-b383-36371deaa6cb/c52865dd-39ca-47f0-ad8b-bc30c22fe16f/built-logic-function/src/logic-functions/smtp-config.json',
+    '/tmp/logic-function-executor/built-logic-function/src/logic-functions/smtp-config.json',
+  ];
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      return JSON.parse(fs.readFileSync(p, 'utf-8'));
+    }
+  }
+  throw new Error('SMTP_HOST is not configured');
+};
 
 export type Task = {
   id: string;
@@ -22,20 +51,18 @@ export type SendEmailParams = {
 export type SendResult = { ok: true } | { ok: false; error: string };
 
 const getTransport = (): nodemailer.Transporter => {
-  const host = process.env.SMTP_HOST ?? '';
-  if (!host) throw new Error('SMTP_HOST is not configured');
+  const config = getSmtpConfig();
 
   return nodemailer.createTransport({
-    host,
-    port: Number(process.env.SMTP_PORT ?? '587'),
-    secure: process.env.SMTP_SECURE === 'true',
-    auth:
-      process.env.SMTP_USER
-        ? {
-            user: process.env.SMTP_USER,
-            pass: process.env.SMTP_PASS ?? '',
-          }
-        : undefined,
+    host: config.host,
+    port: config.port,
+    secure: config.secure,
+    auth: config.user
+      ? {
+          user: config.user,
+          pass: config.pass ?? '',
+        }
+      : undefined,
   });
 };
 

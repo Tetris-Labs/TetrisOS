@@ -69,19 +69,12 @@ export const fetchTasksForMember = async (memberId: string): Promise<Task[]> => 
   // Get all non-DONE, non-CANCELLED tasks assigned to this member
   const data = await gql<TasksResponse>(
     `
-    query FetchTasksForMember($memberId: ID!) {
+    query FetchTasksForMember($memberId: UUID!) {
       tasks(
         filter: {
-          and: [
-            { assigneeId: { eq: $memberId } }
-            { status: { neq: "DONE" } }
-            { status: { neq: "CANCELLED" } }
-          ]
+          assigneeId: { eq: $memberId }
         }
-        orderBy: [
-          { priority: DescNullsLast }
-          { dueAt: AscNullsLast }
-        ]
+        orderBy: { dueAt: AscNullsLast }
       ) {
         edges {
           node {
@@ -89,8 +82,7 @@ export const fetchTasksForMember = async (memberId: string): Promise<Task[]> => 
             title
             status
             dueAt
-            priority
-            body
+            bodyV2 { markdown }
           }
         }
       }
@@ -98,7 +90,15 @@ export const fetchTasksForMember = async (memberId: string): Promise<Task[]> => 
   `,
     { memberId },
   );
-  return data.tasks.edges.map((e) => e.node);
+  return data.tasks.edges
+    .map((e) => e.node)
+    .filter((task) => task.status !== 'DONE' && task.status !== 'CANCELLED' && task.status !== 'ARCHIVED')
+    .sort((a, b) => {
+      if (a.dueAt && b.dueAt) return new Date(a.dueAt).getTime() - new Date(b.dueAt).getTime();
+      if (a.dueAt) return -1;
+      if (b.dueAt) return 1;
+      return 0;
+    });
 };
 
 // Fetch workspace-wide notes created within the lookback window.
