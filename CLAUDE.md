@@ -221,3 +221,22 @@ This handles everything: starts Postgres + Redis (auto-detects local services vs
 - `tsconfig.base.json` - Base TypeScript configuration
 - `package.json` - Root package with workspace definitions
 - `.cursor/rules/` - Detailed development guidelines and best practices
+
+## CRM developer documentations (building apps, using api's, etc)
+
+When building API routes or extending the application, automatically reference the relevant article below using Context7 or WebFetch before writing code.
+
+### APIs
+- **APIs overview** (authentication, Core API, Metadata API, REST vs GraphQL, rate limits, batch ops): https://docs.twenty.com/developers/extend/api
+
+### Webhooks
+- **Webhooks** (create/manage webhooks, events, payload format, validation, Node.js example): https://docs.twenty.com/developers/extend/webhooks
+
+### Apps (building Twenty apps / logic functions)
+- **Getting started** (scaffold app, prerequisites, project structure, key files, local dev server): https://docs.twenty.com/developers/extend/apps/getting-started
+- **Building apps** (defineEntity functions, defineRole, defineApplication, defineObject, defineField, defineLogicFunction, definePreInstallLogicFunction, definePostInstallLogicFunction, defineFrontComponent, defineSkill, defineAgent, defineView, defineNavigationMenuItem, definePageLayout, typed API clients via twenty-client-sdk, testing, CLI reference, CI): https://docs.twenty.com/developers/extend/apps/building
+- **Publishing apps** (build, deploy as tarball, share deployed app, publish to npm, marketplace metadata, installing apps): https://docs.twenty.com/developers/extend/apps/publishing
+
+### Full documentation index
+- https://docs.twenty.com/llms.txt
+
