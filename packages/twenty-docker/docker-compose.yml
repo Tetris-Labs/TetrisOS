@@ -92,6 +92,7 @@ services:
       STORAGE_S3_ENDPOINT: ${STORAGE_S3_ENDPOINT}
 
       APP_SECRET: ${APP_SECRET:-replace_me_with_a_random_string}
+      LOGIC_FUNCTION_TYPE: LOCAL
       SMTP_HOST: ${SMTP_HOST:-smtp.gmail.com}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USER: ${SMTP_USER:-}
