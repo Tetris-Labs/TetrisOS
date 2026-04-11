@@ -237,6 +237,36 @@ When building API routes or extending the application, automatically reference t
 - **Building apps** (defineEntity functions, defineRole, defineApplication, defineObject, defineField, defineLogicFunction, definePreInstallLogicFunction, definePostInstallLogicFunction, defineFrontComponent, defineSkill, defineAgent, defineView, defineNavigationMenuItem, definePageLayout, typed API clients via twenty-client-sdk, testing, CLI reference, CI): https://docs.twenty.com/developers/extend/apps/building
 - **Publishing apps** (build, deploy as tarball, share deployed app, publish to npm, marketplace metadata, installing apps): https://docs.twenty.com/developers/extend/apps/publishing
 
+### App Deployment & Update Workflow (Tarball apps — our setup)
+
+**Deploying a new version (without uninstalling):**
+1. Bump `version` in `package.json` (must be strictly higher semver)
+2. Run `./node_modules/.bin/twenty deploy` from the app directory — builds and uploads the tarball
+3. Trigger install via GraphQL (the UI upgrade button only works for NPM apps, not tarball apps):
+```bash
+curl -s http://localhost:8080/metadata \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $API_KEY" \
+  -d '{"query": "mutation { installApplication(appRegistrationId: \"<appRegistrationId>\") }"}'
+```
+- `appRegistrationId` is in `core."applicationRegistration"` table: `SELECT id FROM core."applicationRegistration" WHERE "universalIdentifier" = '<universalIdentifier>';`
+- `API_KEY` from `core."applicationVariable"` where `key = 'WORKSPACE_API_KEY'` (or from remote config at `~/.config/twenty/config.json`)
+
+**App variables are preserved** on `installApplication` (it upserts, not recreates). Variables are only lost on `uninstallApplication` (cascade delete). Never uninstall unless you have the variable values backed up.
+
+**Manually triggering a logic function:**
+```bash
+cd packages/twenty-apps/community/<app-name>
+./node_modules/.bin/twenty exec -n <functionName> -p '{}'
+```
+
+**WORKSPACE_API_KEY requirement:** Any app that calls `updateWorkspaceMember` (or other mutations gated by the user-workspace pre-query hook) must have `WORKSPACE_API_KEY` set as an app variable (`isSecret=false`). App tokens carry an `applicationId` in auth context which fails the hook. Insert directly into DB if not set via UI:
+```sql
+INSERT INTO core."applicationVariable" (key, value, description, "isSecret", "applicationId")
+VALUES ('WORKSPACE_API_KEY', '<jwt>', 'Workspace API key for updateWorkspaceMember', false, '<applicationId>');
+```
+Then flush Redis cache: `DEL engine:workspace:cache:application-variable:<workspaceId>:hash` and `:data`
+
 ### Full documentation index
 - https://docs.twenty.com/llms.txt
 
