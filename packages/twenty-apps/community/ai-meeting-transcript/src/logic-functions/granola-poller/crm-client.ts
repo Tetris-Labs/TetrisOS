@@ -16,15 +16,21 @@ const getToken = (): string => {
   return token;
 };
 
+// updateWorkspaceMember requires API key auth (app tokens fail its pre-query hook).
+// WORKSPACE_API_KEY is stored as an app variable (isSecret=true) and injected at runtime.
+const getWorkspaceApiKey = (): string =>
+  process.env.WORKSPACE_API_KEY ?? getToken();
+
 const gql = async <T>(
   query: string,
   variables?: Record<string, unknown>,
+  token?: string,
 ): Promise<T> => {
   const res = await fetch(`${getApiUrl()}/graphql`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${getToken()}`,
+      Authorization: `Bearer ${token ?? getToken()}`,
     },
     body: JSON.stringify({ query, variables: variables ?? {} }),
   });
@@ -52,9 +58,7 @@ export const fetchWorkspaceMembersWithGranolaKey =
   async (): Promise<WorkspaceMemberWithGranola[]> => {
     const data = await gql<WorkspaceMembersResponse>(`
     query FetchWorkspaceMembersWithGranolaKey {
-      workspaceMembers(
-        filter: { granolaApiKey: { isNullable: false, neq: "" } }
-      ) {
+      workspaceMembers {
         edges {
           node {
             id
@@ -67,7 +71,9 @@ export const fetchWorkspaceMembersWithGranolaKey =
       }
     }
   `);
-    return data.workspaceMembers.edges.map((e) => e.node);
+    return data.workspaceMembers.edges
+      .map((e) => e.node)
+      .filter((m) => !!m.granolaApiKey && m.granolaApiKey.length > 0);
   };
 
 export const updateGranolaLastSyncedAt = async (
@@ -83,6 +89,7 @@ export const updateGranolaLastSyncedAt = async (
     }
   `,
     { id: workspaceMemberId, granolaLastSyncedAt },
+    getWorkspaceApiKey(),
   );
 };
 

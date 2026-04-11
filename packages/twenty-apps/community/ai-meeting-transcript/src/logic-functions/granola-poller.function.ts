@@ -20,6 +20,7 @@ const isExternal = (attendee: GranolaAttendee): boolean =>
 type PollResult = {
   processedMembers: number;
   processedMeetings: number;
+  fetchedNoteStubs: number;
   errors: string[];
 };
 
@@ -27,6 +28,7 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
   const members = await fetchWorkspaceMembersWithGranolaKey();
   const errors: string[] = [];
   let totalMeetings = 0;
+  let totalNoteStubs = 0;
 
   for (const member of members) {
     if (!member.granolaApiKey) continue;
@@ -41,6 +43,7 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
         member.granolaApiKey,
         member.granolaLastSyncedAt,
       );
+      totalNoteStubs += noteStubs.length;
 
       for (const stub of noteStubs) {
         try {
@@ -89,13 +92,22 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
         }
       }
 
-      await updateGranolaLastSyncedAt(member.id, syncStart);
+      try {
+        await updateGranolaLastSyncedAt(member.id, syncStart);
+      } catch (err) {
+        errors.push(`[${memberLabel}] lastSyncedAt update failed: ${String(err)}`);
+      }
     } catch (err) {
       errors.push(`[${memberLabel}] sync failed: ${String(err)}`);
     }
   }
 
-  return { processedMembers: members.length, processedMeetings: totalMeetings, errors };
+  return {
+    processedMembers: members.length,
+    processedMeetings: totalMeetings,
+    fetchedNoteStubs: totalNoteStubs,
+    errors,
+  };
 };
 
 export default defineLogicFunction({
