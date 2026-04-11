@@ -17,7 +17,7 @@ const getToken = (): string => {
 };
 
 // updateWorkspaceMember requires API key auth (app tokens fail its pre-query hook).
-// WORKSPACE_API_KEY is stored as an app variable (isSecret=true) and injected at runtime.
+// WORKSPACE_API_KEY is stored as an app variable (isSecret=false) and injected at runtime.
 const getWorkspaceApiKey = (): string =>
   process.env.WORKSPACE_API_KEY ?? getToken();
 
@@ -143,12 +143,12 @@ export const findMeetingByGranolaId = async (
 
 export type CreateMeetingInput = {
   name: string;
-  summaryMarkdown: string;
+  bodyMarkdown: string;
   granolaId: string;
   meetingDate?: string;
   granolaUrl?: string;
   workspaceMemberId?: string;
-  personId?: string;
+  organiserId?: string;
   companyId?: string;
 };
 
@@ -159,7 +159,7 @@ type CreateMeetingResponse = {
 export const createMeeting = async (input: CreateMeetingInput): Promise<string> => {
   const data: Record<string, unknown> = {
     name: input.name,
-    summary: { markdown: input.summaryMarkdown, blocknote: null },
+    body: { markdown: input.bodyMarkdown, blocknote: null },
     granolaId: input.granolaId,
     source: 'GRANOLA',
   };
@@ -173,7 +173,7 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
     };
   }
   if (input.workspaceMemberId) data.workspaceMemberId = input.workspaceMemberId;
-  if (input.personId) data.personId = input.personId;
+  if (input.organiserId) data.organiserId = input.organiserId;
   if (input.companyId) data.companyId = input.companyId;
 
   const res = await gql<CreateMeetingResponse>(
@@ -188,4 +188,47 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
   );
 
   return res.createMeeting.id;
+};
+
+// --- Meeting Participants ---
+
+type MeetingParticipantRecord = { id: string };
+type MeetingParticipantsResponse = {
+  meetingParticipants: { edges: { node: MeetingParticipantRecord }[] };
+};
+
+export const findMeetingParticipant = async (
+  meetingId: string,
+  personId: string,
+): Promise<MeetingParticipantRecord | null> => {
+  const data = await gql<MeetingParticipantsResponse>(
+    `
+    query FindMeetingParticipant($meetingId: UUID!, $personId: UUID!) {
+      meetingParticipants(
+        filter: { meetingId: { eq: $meetingId }, personId: { eq: $personId } }
+        first: 1
+      ) {
+        edges { node { id } }
+      }
+    }
+  `,
+    { meetingId, personId },
+  );
+  return data.meetingParticipants.edges[0]?.node ?? null;
+};
+
+export const createMeetingParticipant = async (
+  meetingId: string,
+  personId: string,
+): Promise<void> => {
+  await gql(
+    `
+    mutation CreateMeetingParticipant($data: MeetingParticipantCreateInput!) {
+      createMeetingParticipant(data: $data) {
+        id
+      }
+    }
+  `,
+    { data: { meetingId, personId } },
+  );
 };

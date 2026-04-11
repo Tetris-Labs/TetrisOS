@@ -6,6 +6,8 @@ import {
   createMeeting,
   findMeetingByGranolaId,
   findPeopleByEmails,
+  createMeetingParticipant,
+  findMeetingParticipant,
 } from './granola-poller/crm-client';
 import { fetchNewNotes, fetchNote } from './granola-poller/granola-client';
 import type { GranolaAttendee } from './granola-poller/types';
@@ -14,8 +16,11 @@ import type { GranolaAttendee } from './granola-poller/types';
 // to link meetings to CRM people — we only want to link to external participants.
 const INTERNAL_DOMAIN = 'tetrislabs.co';
 
-const isExternal = (attendee: GranolaAttendee): boolean =>
-  !!attendee.email && !attendee.email.toLowerCase().endsWith(`@${INTERNAL_DOMAIN}`);
+const isExternal = (email: string): boolean =>
+  !!email && !email.toLowerCase().endsWith(`@${INTERNAL_DOMAIN}`);
+
+const granolaNoteUrl = (noteId: string): string =>
+  `https://app.granola.ai/note/${noteId}`;
 
 type PollResult = {
   processedMembers: number;
@@ -59,32 +64,60 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
             note.title ||
             `Meeting - ${new Date(note.created_at).toLocaleDateString('en-US')}`;
 
-          // Resolve the primary external attendee and their company
-          const externalEmails = (note.attendees ?? [])
-            .filter(isExternal)
-            .map((a) => a.email);
-
-          let personId: string | undefined;
+          // Resolve organiser from calendar event
+          const organiserEmail = note.calendar_event?.organiser;
+          let organiserId: string | undefined;
           let companyId: string | undefined;
 
-          if (externalEmails.length) {
-            const people = await findPeopleByEmails(externalEmails);
+          if (organiserEmail && isExternal(organiserEmail)) {
+            const matches = await findPeopleByEmails([organiserEmail]);
+            if (matches.length > 0) {
+              organiserId = matches[0].id;
+              companyId = matches[0].companyId ?? undefined;
+            }
+          }
+
+          // Resolve all external attendees for participants
+          const externalAttendeeEmails = (note.attendees ?? [])
+            .map((a: GranolaAttendee) => a.email)
+            .filter((email: string) => !!email && isExternal(email));
+
+          // If no organiser yet, fall back to first matched external attendee
+          if (!organiserId && externalAttendeeEmails.length > 0) {
+            const people = await findPeopleByEmails(externalAttendeeEmails);
             if (people.length > 0) {
-              personId = people[0].id;
+              organiserId = people[0].id;
               companyId = people[0].companyId ?? undefined;
             }
           }
 
-          await createMeeting({
+          const meetingId = await createMeeting({
             name,
-            summaryMarkdown: note.summary_markdown,
+            bodyMarkdown: note.summary_markdown,
             granolaId: note.id,
             meetingDate: note.calendar_event?.scheduled_start_time,
-            granolaUrl: note.sharing_url,
+            granolaUrl: granolaNoteUrl(note.id),
             workspaceMemberId: member.id,
-            personId,
+            organiserId,
             companyId,
           });
+
+          // Create participant records for all matched external attendees
+          if (externalAttendeeEmails.length > 0) {
+            const participants = await findPeopleByEmails(externalAttendeeEmails);
+            for (const participant of participants) {
+              try {
+                const alreadyLinked = await findMeetingParticipant(meetingId, participant.id);
+                if (!alreadyLinked) {
+                  await createMeetingParticipant(meetingId, participant.id);
+                }
+              } catch (err) {
+                errors.push(
+                  `[${memberLabel}] note ${stub.id}: participant ${participant.id}: ${String(err)}`,
+                );
+              }
+            }
+          }
 
           totalMeetings++;
         } catch (err) {

@@ -5,7 +5,8 @@ export const MEETING_OBJECT_UNIVERSAL_IDENTIFIER = 'a991e711-f8cf-41d4-be9a-83e1
 // Field UUIDs for cross-file relation wiring
 export const MEETING_NAME_FIELD_ID = 'cae92507-ab90-46bb-bdf1-9bd1736e94f7';
 export const MEETING_WORKSPACE_MEMBER_FIELD_ID = 'c3110621-650f-40fd-ab06-d402f2f1e2b6';
-export const MEETING_PERSON_FIELD_ID = 'd2801814-8fe2-44e1-b836-16be75fbf2a8';
+// Reuses old MEETING_PERSON_FIELD_ID UUID — data preserved, renamed to organiser
+export const MEETING_ORGANISER_FIELD_ID = 'd2801814-8fe2-44e1-b836-16be75fbf2a8';
 export const MEETING_COMPANY_FIELD_ID = '7fc508a8-2cd9-4219-94d9-17f0017653d0';
 
 export default defineObject({
@@ -46,9 +47,9 @@ export default defineObject({
     },
     {
       universalIdentifier: 'd12b9cf9-e1d1-40b6-957f-4467ca870bf3',
-      name: 'summary',
+      name: 'body',
       type: FieldType.RICH_TEXT,
-      label: 'Summary',
+      label: 'Body',
       description: 'AI-generated meeting summary from Granola',
       icon: 'IconSparkles',
     },
