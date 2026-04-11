@@ -24,7 +24,7 @@ git reset --hard origin/main
 # Build and deploy
 log "Building from source and deploying..."
 cd "$COMPOSE_DIR"
-docker compose build --no-cache server
+docker compose build server
 docker compose up -d --force-recreate
 
 log "Waiting for health check..."
