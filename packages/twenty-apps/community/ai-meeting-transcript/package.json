@@ -1,7 +1,10 @@
 {
   "name": "ai-meeting-transcript",
-  "version": "0.0.1",
+  "version": "0.0.5",
   "license": "MIT",
+  "scripts": {
+    "twenty": "twenty"
+  },
   "engines": {
     "node": "^24.5.0",
     "npm": "please-use-yarn",

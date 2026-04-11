@@ -35,6 +35,14 @@ const SettingsAccountsCalendars = lazy(() =>
   ),
 );
 
+const SettingsAccountsGranola = lazy(() =>
+  import('~/pages/settings/accounts/SettingsAccountsGranola').then(
+    (module) => ({
+      default: module.SettingsAccountsGranola,
+    }),
+  ),
+);
+
 const SettingsAccountsEmails = lazy(() =>
   import('~/pages/settings/accounts/SettingsAccountsEmails').then((module) => ({
     default: module.SettingsAccountsEmails,
@@ -491,6 +499,10 @@ export const SettingsRoutes = ({ isAdminPageEnabled }: SettingsRoutesProps) => (
         <Route
           path={SettingsPath.AccountsEmails}
           element={<SettingsAccountsEmails />}
+        />
+        <Route
+          path={SettingsPath.AccountsGranola}
+          element={<SettingsAccountsGranola />}
         />
         <Route
           path={SettingsPath.NewImapSmtpCaldavConnection}

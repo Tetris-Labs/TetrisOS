@@ -38,6 +38,7 @@ import {
   IconSparkles,
   IconUserCircle,
   IconUsers,
+  IconVideo,
   IconWorld,
 } from 'twenty-ui/display';
 import {
@@ -118,6 +119,13 @@ const useSettingsNavigationItems = (): SettingsNavigationSection[] => {
               label: t`Calendars`,
               path: SettingsPath.AccountsCalendars,
               Icon: IconCalendarEvent,
+              isHidden: !permissionMap[PermissionFlagType.CONNECTED_ACCOUNTS],
+              indentationLevel: 2,
+            },
+            {
+              label: t`Granola`,
+              path: SettingsPath.AccountsGranola,
+              Icon: IconVideo,
               isHidden: !permissionMap[PermissionFlagType.CONNECTED_ACCOUNTS],
               indentationLevel: 2,
             },
