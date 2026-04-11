@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { currentWorkspaceMemberState } from '@/auth/states/currentWorkspaceMemberState';
+import { useFindOneRecord } from '@/object-record/hooks/useFindOneRecord';
 import { useUpdateOneRecord } from '@/object-record/hooks/useUpdateOneRecord';
 import { SaveAndCancelButtons } from '@/settings/components/SaveAndCancelButtons/SaveAndCancelButtons';
 import { SettingsPageContainer } from '@/settings/components/SettingsPageContainer';
@@ -8,28 +9,16 @@ import { SubMenuTopBarContainer } from '@/ui/layout/page/components/SubMenuTopBa
 import { useSnackBar } from '@/ui/feedback/snack-bar-manager/hooks/useSnackBar';
 import { SettingsTextInput } from '@/ui/input/components/SettingsTextInput';
 import { useAtomStateValue } from '@/ui/utilities/state/jotai/hooks/useAtomStateValue';
-import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/client/react';
 import { Trans, useLingui } from '@lingui/react/macro';
 import { CoreObjectNameSingular, SettingsPath } from 'twenty-shared/types';
 import { getSettingsPath } from 'twenty-shared/utils';
 import { H2Title } from 'twenty-ui/display';
 import { Section } from 'twenty-ui/layout';
 
-const GET_WORKSPACE_MEMBER_GRANOLA_KEY = gql`
-  query GetWorkspaceMemberGranolaKey($id: UUID!) {
-    workspaceMember(id: $id) {
-      id
-      granolaApiKey
-    }
-  }
-`;
-
-type WorkspaceMemberGranolaKeyResult = {
-  workspaceMember: {
-    id: string;
-    granolaApiKey: string | null;
-  };
+type WorkspaceMemberWithGranola = {
+  __typename: string;
+  id: string;
+  granolaApiKey?: string | null;
 };
 
 export const SettingsAccountsGranola = () => {
@@ -42,15 +31,20 @@ export const SettingsAccountsGranola = () => {
   const [savedApiKey, setSavedApiKey] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
-  useQuery<WorkspaceMemberGranolaKeyResult>(GET_WORKSPACE_MEMBER_GRANOLA_KEY, {
-    variables: { id: currentWorkspaceMember?.id },
+  const { record } = useFindOneRecord<WorkspaceMemberWithGranola>({
+    objectNameSingular: CoreObjectNameSingular.WorkspaceMember,
+    objectRecordId: currentWorkspaceMember?.id,
+    recordGqlFields: { id: true, granolaApiKey: true },
     skip: !currentWorkspaceMember?.id,
-    onCompleted: (data) => {
-      const value = data.workspaceMember.granolaApiKey ?? '';
+  });
+
+  useEffect(() => {
+    if (record) {
+      const value = record.granolaApiKey ?? '';
       setApiKey(value);
       setSavedApiKey(value);
-    },
-  });
+    }
+  }, [record]);
 
   const { updateOneRecord } = useUpdateOneRecord();
 
