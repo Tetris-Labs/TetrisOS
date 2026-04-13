@@ -9,10 +9,8 @@ const StyledListItem = styled.div<{
 }>`
   align-items: center;
   display: flex;
-  flex-wrap: wrap;
   gap: ${themeCssVariables.spacing[1]};
-  min-width: 0;
-  min-height: ${themeCssVariables.spacing[10]};
+  height: ${themeCssVariables.spacing[10]};
   justify-content: space-between;
   padding-left: ${({ noHorizontalPadding }) =>
     noHorizontalPadding ? 0 : themeCssVariables.spacing[3]};

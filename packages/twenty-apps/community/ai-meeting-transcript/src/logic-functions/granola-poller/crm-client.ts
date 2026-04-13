@@ -76,30 +76,6 @@ export const fetchWorkspaceMembersWithGranolaKey =
       .filter((m) => !!m.granolaApiKey && m.granolaApiKey.length > 0);
   };
 
-type WorkspaceMemberEmailResponse = {
-  workspaceMembers: {
-    edges: { node: { userEmail: string | null } }[];
-  };
-};
-
-export const fetchWorkspaceMemberEmails = async (): Promise<string[]> => {
-  const data = await gql<WorkspaceMemberEmailResponse>(`
-    query FetchWorkspaceMemberEmails {
-      workspaceMembers {
-        edges {
-          node {
-            userEmail
-          }
-        }
-      }
-    }
-  `);
-
-  return data.workspaceMembers.edges
-    .map((edge) => edge.node.userEmail?.trim().toLowerCase())
-    .filter((email): email is string => !!email);
-};
-
 export const updateGranolaLastSyncedAt = async (
   workspaceMemberId: string,
   granolaLastSyncedAt: string,
@@ -172,11 +148,7 @@ export type CreateMeetingInput = {
   meetingDate?: string;
   granolaUrl?: string;
   workspaceMemberId?: string;
-  companyId?: string;
-};
-
-export type UpdateMeetingInput = {
-  id: string;
+  organiserId?: string;
   companyId?: string;
 };
 
@@ -201,6 +173,7 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
     };
   }
   if (input.workspaceMemberId) data.workspaceMemberId = input.workspaceMemberId;
+  if (input.organiserId) data.organiserId = input.organiserId;
   if (input.companyId) data.companyId = input.companyId;
 
   const res = await gql<CreateMeetingResponse>(
@@ -215,33 +188,6 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
   );
 
   return res.createMeeting.id;
-};
-
-type UpdateMeetingResponse = {
-  updateMeeting: { id: string };
-};
-
-export const updateMeeting = async (input: UpdateMeetingInput): Promise<void> => {
-  const data: Record<string, unknown> = {};
-
-  if (input.companyId) {
-    data.companyId = input.companyId;
-  }
-
-  if (Object.keys(data).length === 0) {
-    return;
-  }
-
-  await gql<UpdateMeetingResponse>(
-    `
-    mutation UpdateMeeting($id: UUID!, $data: MeetingUpdateInput!) {
-      updateMeeting(id: $id, data: $data) {
-        id
-      }
-    }
-  `,
-    { id: input.id, data },
-  );
 };
 
 // --- Meeting Participants ---

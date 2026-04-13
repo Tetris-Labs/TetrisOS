@@ -1,7 +1,6 @@
 import {
   MEETING_PARTICIPANT_PERSON_FIELD_ID,
   MEETING_PARTICIPANT_OBJECT_UNIVERSAL_IDENTIFIER,
-  MEETING_PARTICIPANT_MEETING_FIELD_ID,
 } from '../objects/meeting-participant.object';
 import { defineField, FieldType, RelationType } from 'twenty-sdk';
 
@@ -12,9 +11,9 @@ export default defineField({
   universalIdentifier: PARTICIPATIONS_ON_PERSON_FIELD_ID,
   objectUniversalIdentifier: '20202020-e674-48e5-a542-72570eee7213',
   type: FieldType.RELATION,
-  name: 'meetings',
-  label: 'Meetings',
-  description: 'Meetings linked to this person through participants',
+  name: 'meetingParticipations',
+  label: 'Meeting Participations',
+  description: 'Meetings this person participated in',
   icon: 'IconVideo',
   relationTargetObjectMetadataUniversalIdentifier:
     MEETING_PARTICIPANT_OBJECT_UNIVERSAL_IDENTIFIER,
@@ -22,7 +21,5 @@ export default defineField({
     MEETING_PARTICIPANT_PERSON_FIELD_ID,
   universalSettings: {
     relationType: RelationType.ONE_TO_MANY,
-    junctionTargetFieldUniversalIdentifier:
-      MEETING_PARTICIPANT_MEETING_FIELD_ID,
   },
 });

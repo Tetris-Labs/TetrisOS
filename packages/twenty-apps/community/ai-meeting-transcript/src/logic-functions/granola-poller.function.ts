@@ -2,10 +2,8 @@ import { defineLogicFunction } from 'twenty-sdk';
 import type { CronPayload } from 'twenty-sdk';
 import {
   fetchWorkspaceMembersWithGranolaKey,
-  fetchWorkspaceMemberEmails,
   updateGranolaLastSyncedAt,
   createMeeting,
-  updateMeeting,
   findMeetingByGranolaId,
   findPeopleByEmails,
   createMeetingParticipant,
@@ -18,18 +16,8 @@ import type { GranolaAttendee } from './granola-poller/types';
 // to link meetings to CRM people — we only want to link to external participants.
 const INTERNAL_DOMAIN = 'tetrislabs.co';
 
-const isExternalParticipantEmail = (
-  email: string,
-  workspaceMemberEmails: Set<string>,
-): boolean => {
-  const normalizedEmail = email.trim().toLowerCase();
-
-  return (
-    !!normalizedEmail &&
-    !normalizedEmail.endsWith(`@${INTERNAL_DOMAIN}`) &&
-    !workspaceMemberEmails.has(normalizedEmail)
-  );
-};
+const isExternal = (email: string): boolean =>
+  !!email && !email.toLowerCase().endsWith(`@${INTERNAL_DOMAIN}`);
 
 const granolaNoteUrl = (noteId: string): string =>
   `https://app.granola.ai/note/${noteId}`;
@@ -43,7 +31,6 @@ type PollResult = {
 
 const handler = async (_payload: CronPayload): Promise<PollResult> => {
   const members = await fetchWorkspaceMembersWithGranolaKey();
-  const workspaceMemberEmails = new Set(await fetchWorkspaceMemberEmails());
   const errors: string[] = [];
   let totalMeetings = 0;
   let totalNoteStubs = 0;
@@ -69,47 +56,51 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
 
           if (!note.summary_markdown) continue;
 
+          // Skip if we've already imported this Granola note
           const existing = await findMeetingByGranolaId(note.id);
+          if (existing) continue;
 
           const name =
             note.title ||
             `Meeting - ${new Date(note.created_at).toLocaleDateString('en-US')}`;
 
+          // Resolve organiser from calendar event
+          const organiserEmail = note.calendar_event?.organiser;
+          let organiserId: string | undefined;
           let companyId: string | undefined;
+
+          if (organiserEmail && isExternal(organiserEmail)) {
+            const matches = await findPeopleByEmails([organiserEmail]);
+            if (matches.length > 0) {
+              organiserId = matches[0].id;
+              companyId = matches[0].companyId ?? undefined;
+            }
+          }
 
           // Resolve all external attendees for participants
           const externalAttendeeEmails = (note.attendees ?? [])
             .map((a: GranolaAttendee) => a.email)
-            .filter((email: string) =>
-              !!email && isExternalParticipantEmail(email, workspaceMemberEmails),
-            );
+            .filter((email: string) => !!email && isExternal(email));
 
-          // Use the first matched external attendee to infer the company on the meeting.
-          if (externalAttendeeEmails.length > 0) {
+          // If no organiser yet, fall back to first matched external attendee
+          if (!organiserId && externalAttendeeEmails.length > 0) {
             const people = await findPeopleByEmails(externalAttendeeEmails);
             if (people.length > 0) {
+              organiserId = people[0].id;
               companyId = people[0].companyId ?? undefined;
             }
           }
 
-          const meetingId = existing
-            ? existing.id
-            : await createMeeting({
-                name,
-                bodyMarkdown: note.summary_markdown,
-                granolaId: note.id,
-                meetingDate: note.calendar_event?.scheduled_start_time,
-                granolaUrl: granolaNoteUrl(note.id),
-                workspaceMemberId: member.id,
-                companyId,
-              });
-
-          if (existing) {
-            await updateMeeting({
-              id: existing.id,
-              companyId,
-            });
-          }
+          const meetingId = await createMeeting({
+            name,
+            bodyMarkdown: note.summary_markdown,
+            granolaId: note.id,
+            meetingDate: note.calendar_event?.scheduled_start_time,
+            granolaUrl: granolaNoteUrl(note.id),
+            workspaceMemberId: member.id,
+            organiserId,
+            companyId,
+          });
 
           // Create participant records for all matched external attendees
           if (externalAttendeeEmails.length > 0) {

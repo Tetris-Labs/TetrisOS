@@ -52,14 +52,9 @@ const StyledClickableZone = styled.div`
   align-items: center;
   cursor: pointer;
   display: flex;
-  flex: 0 0 auto;
+  flex: 1 0 auto;
   height: 100%;
   justify-content: flex-end;
-`;
-
-const StyledRecordChip = styled(RecordChip)`
-  flex: 1 1 auto;
-  min-width: 0;
 `;
 
 const MotionIconChevronDown = motion.create(IconChevronDown);
@@ -225,7 +220,7 @@ export const RecordDetailRelationRecordsListItem = ({
         isDropdownOpen={isDropdownOpen}
         data-testid="record-detail-records-list-item"
       >
-        <StyledRecordChip
+        <RecordChip
           record={relationRecord}
           objectNameSingular={relationObjectMetadataItem.nameSingular}
         />
