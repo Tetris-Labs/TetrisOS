@@ -10,6 +10,7 @@ export default defineApplication({
     'Sends a personalized daily email digest to each workspace member summarising their overdue/due-today tasks, recent notes, and pipeline updates.',
   icon: 'IconMail',
   defaultRoleUniversalIdentifier: DEFAULT_ROLE_UNIVERSAL_IDENTIFIER,
+  apiClientChecksum: null,
   applicationVariables: {
     SMTP_HOST: {
       universalIdentifier: '156ddf17-a109-4053-87a1-bd28954b89cc',
@@ -65,6 +66,12 @@ export default defineApplication({
         'Set to "true" to skip sending an email when a user has no tasks, notes, or pipeline items (default: true)',
       isSecret: false,
       value: 'true',
+    },
+    WORKSPACE_API_KEY: {
+      universalIdentifier: 'b1e2f3a4-c5d6-7890-abcd-ef1234567890',
+      description: 'Workspace API key — required to access custom fields (like task priority) that are invisible to app tokens',
+      isSecret: true,
+      value: '',
     },
   },
 });

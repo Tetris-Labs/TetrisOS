@@ -16,8 +16,11 @@ const getApiUrl = (): string =>
   (process.env.TWENTY_API_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 
 const getToken = (): string => {
-  const token = process.env.TWENTY_APP_ACCESS_TOKEN ?? '';
-  if (!token) throw new Error('TWENTY_APP_ACCESS_TOKEN is not set');
+  // Prefer WORKSPACE_API_KEY so the GraphQL schema is unfiltered (app tokens
+  // can't see custom fields like `priority` that are owned by other apps).
+  const token =
+    process.env.WORKSPACE_API_KEY ?? process.env.TWENTY_APP_ACCESS_TOKEN ?? '';
+  if (!token) throw new Error('WORKSPACE_API_KEY or TWENTY_APP_ACCESS_TOKEN is not set');
   return token;
 };
 
@@ -82,6 +85,7 @@ export const fetchTasksForMember = async (memberId: string): Promise<Task[]> => 
             title
             status
             dueAt
+            priority
             bodyV2 { markdown }
           }
         }
