@@ -148,7 +148,6 @@ export type CreateMeetingInput = {
   meetingDate?: string;
   granolaUrl?: string;
   workspaceMemberId?: string;
-  organiserId?: string;
   companyId?: string;
 };
 
@@ -173,7 +172,6 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
     };
   }
   if (input.workspaceMemberId) data.workspaceMemberId = input.workspaceMemberId;
-  if (input.organiserId) data.organiserId = input.organiserId;
   if (input.companyId) data.companyId = input.companyId;
 
   const res = await gql<CreateMeetingResponse>(

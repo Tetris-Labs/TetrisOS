@@ -2,6 +2,7 @@ import { MEETING_OBJECT_UNIVERSAL_IDENTIFIER } from '../objects/meeting.object';
 import {
   MEETING_PARTICIPANT_MEETING_FIELD_ID,
   MEETING_PARTICIPANT_OBJECT_UNIVERSAL_IDENTIFIER,
+  MEETING_PARTICIPANT_PERSON_FIELD_ID,
 } from '../objects/meeting-participant.object';
 import { defineField, FieldType, RelationType } from 'twenty-sdk';
 
@@ -22,5 +23,7 @@ export default defineField({
     MEETING_PARTICIPANT_MEETING_FIELD_ID,
   universalSettings: {
     relationType: RelationType.ONE_TO_MANY,
+    junctionTargetFieldUniversalIdentifier:
+      MEETING_PARTICIPANT_PERSON_FIELD_ID,
   },
 });

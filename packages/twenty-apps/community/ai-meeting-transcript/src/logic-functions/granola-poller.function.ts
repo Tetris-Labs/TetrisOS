@@ -64,32 +64,17 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
             note.title ||
             `Meeting - ${new Date(note.created_at).toLocaleDateString('en-US')}`;
 
-          // Resolve organiser from calendar event
-          const organiserEmail = note.calendar_event?.organiser;
-          let organiserId: string | undefined;
-          let companyId: string | undefined;
-
-          if (organiserEmail && isExternal(organiserEmail)) {
-            const matches = await findPeopleByEmails([organiserEmail]);
-            if (matches.length > 0) {
-              organiserId = matches[0].id;
-              companyId = matches[0].companyId ?? undefined;
-            }
-          }
-
-          // Resolve all external attendees for participants
+          // Resolve all external attendees — used for both company and participants
           const externalAttendeeEmails = (note.attendees ?? [])
             .map((a: GranolaAttendee) => a.email)
             .filter((email: string) => !!email && isExternal(email));
 
-          // If no organiser yet, fall back to first matched external attendee
-          if (!organiserId && externalAttendeeEmails.length > 0) {
-            const people = await findPeopleByEmails(externalAttendeeEmails);
-            if (people.length > 0) {
-              organiserId = people[0].id;
-              companyId = people[0].companyId ?? undefined;
-            }
-          }
+          const externalPeople = externalAttendeeEmails.length > 0
+            ? await findPeopleByEmails(externalAttendeeEmails)
+            : [];
+
+          // Use first matched external attendee's company as the meeting company
+          const companyId = externalPeople[0]?.companyId ?? undefined;
 
           const meetingId = await createMeeting({
             name,
@@ -98,13 +83,12 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
             meetingDate: note.calendar_event?.scheduled_start_time,
             granolaUrl: granolaNoteUrl(note.id),
             workspaceMemberId: member.id,
-            organiserId,
             companyId,
           });
 
           // Create participant records for all matched external attendees
-          if (externalAttendeeEmails.length > 0) {
-            const participants = await findPeopleByEmails(externalAttendeeEmails);
+          if (externalPeople.length > 0) {
+            const participants = externalPeople;
             for (const participant of participants) {
               try {
                 const alreadyLinked = await findMeetingParticipant(meetingId, participant.id);
