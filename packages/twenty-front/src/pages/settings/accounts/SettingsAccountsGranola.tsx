@@ -19,7 +19,6 @@ type WorkspaceMemberWithGranola = {
   __typename: string;
   id: string;
   granolaApiKey?: string | null;
-  granolaFilterDomain?: string | null;
 };
 
 export const SettingsAccountsGranola = () => {
@@ -30,31 +29,26 @@ export const SettingsAccountsGranola = () => {
 
   const [apiKey, setApiKey] = useState('');
   const [savedApiKey, setSavedApiKey] = useState('');
-  const [filterDomain, setFilterDomain] = useState('');
-  const [savedFilterDomain, setSavedFilterDomain] = useState('');
   const [isSaving, setIsSaving] = useState(false);
 
   const { record } = useFindOneRecord<WorkspaceMemberWithGranola>({
     objectNameSingular: CoreObjectNameSingular.WorkspaceMember,
     objectRecordId: currentWorkspaceMember?.id,
-    recordGqlFields: { id: true, granolaApiKey: true, granolaFilterDomain: true },
+    recordGqlFields: { id: true, granolaApiKey: true },
     skip: !currentWorkspaceMember?.id,
   });
 
   useEffect(() => {
     if (record) {
-      const key = record.granolaApiKey ?? '';
-      setApiKey(key);
-      setSavedApiKey(key);
-      const domain = record.granolaFilterDomain ?? '';
-      setFilterDomain(domain);
-      setSavedFilterDomain(domain);
+      const value = record.granolaApiKey ?? '';
+      setApiKey(value);
+      setSavedApiKey(value);
     }
   }, [record]);
 
   const { updateOneRecord } = useUpdateOneRecord();
 
-  const isDirty = apiKey !== savedApiKey || filterDomain !== savedFilterDomain;
+  const isDirty = apiKey !== savedApiKey;
 
   const handleSave = async () => {
     if (!currentWorkspaceMember?.id) return;
@@ -63,16 +57,12 @@ export const SettingsAccountsGranola = () => {
       await updateOneRecord({
         objectNameSingular: CoreObjectNameSingular.WorkspaceMember,
         idToUpdate: currentWorkspaceMember.id,
-        updateOneRecordInput: {
-          granolaApiKey: apiKey,
-          granolaFilterDomain: filterDomain || null,
-        },
+        updateOneRecordInput: { granolaApiKey: apiKey },
       });
       setSavedApiKey(apiKey);
-      setSavedFilterDomain(filterDomain);
-      enqueueSuccessSnackBar({ message: t`Granola settings saved.` });
+      enqueueSuccessSnackBar({ message: t`Granola API key saved.` });
     } catch {
-      enqueueErrorSnackBar({ message: t`Failed to save Granola settings.` });
+      enqueueErrorSnackBar({ message: t`Failed to save Granola API key.` });
     } finally {
       setIsSaving(false);
     }
@@ -80,7 +70,6 @@ export const SettingsAccountsGranola = () => {
 
   const handleCancel = () => {
     setApiKey(savedApiKey);
-    setFilterDomain(savedFilterDomain);
   };
 
   return (
@@ -118,19 +107,6 @@ export const SettingsAccountsGranola = () => {
             value={apiKey}
             onChange={setApiKey}
             placeholder="grn_..."
-            fullWidth
-          />
-        </Section>
-        <Section>
-          <H2Title
-            title={t`Filter Domain`}
-            description={t`Only import meetings where at least one attendee has an email from this domain (e.g. acme.com). Leave blank to import all meetings.`}
-          />
-          <SettingsTextInput
-            instanceId="granola-filter-domain"
-            value={filterDomain}
-            onChange={setFilterDomain}
-            placeholder="acme.com"
             fullWidth
           />
         </Section>

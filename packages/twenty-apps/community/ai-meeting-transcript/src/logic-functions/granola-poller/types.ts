@@ -4,7 +4,6 @@ export type WorkspaceMemberWithGranola = {
   userEmail: string;
   granolaApiKey: string | null;
   granolaLastSyncedAt: string | null;
-  granolaFilterDomain: string | null;
 };
 
 export type GranolaAttendee = {

@@ -6,7 +6,6 @@ export const MEETING_OBJECT_UNIVERSAL_IDENTIFIER = 'a991e711-f8cf-41d4-be9a-83e1
 export const MEETING_NAME_FIELD_ID = 'cae92507-ab90-46bb-bdf1-9bd1736e94f7';
 export const MEETING_WORKSPACE_MEMBER_FIELD_ID = 'c3110621-650f-40fd-ab06-d402f2f1e2b6';
 export const MEETING_COMPANY_FIELD_ID = '7fc508a8-2cd9-4219-94d9-17f0017653d0';
-export const MEETING_PARTICIPANT_FIELD_ID = 'e7f1a2b3-c4d5-4e6f-8a9b-0c1d2e3f4a5b';
 
 export default defineObject({
   universalIdentifier: MEETING_OBJECT_UNIVERSAL_IDENTIFIER,
