@@ -65,6 +65,15 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
             `Meeting - ${new Date(note.created_at).toLocaleDateString('en-US')}`;
 
           // Resolve all external attendees — used for both company and participants
+          // If the member has a filter domain set, skip meetings with no attendee from that domain
+          if (member.granolaFilterDomain) {
+            const domain = member.granolaFilterDomain.toLowerCase().replace(/^@/, '');
+            const hasMatchingAttendee = (note.attendees ?? []).some(
+              (a: GranolaAttendee) => a.email?.toLowerCase().endsWith(`@${domain}`),
+            );
+            if (!hasMatchingAttendee) continue;
+          }
+
           const externalAttendeeEmails = (note.attendees ?? [])
             .map((a: GranolaAttendee) => a.email)
             .filter((email: string) => !!email && isExternal(email));
