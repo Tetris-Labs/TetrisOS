@@ -6,18 +6,19 @@ import {
   createMeeting,
   findMeetingByGranolaId,
   findPeopleByEmails,
-  createMeetingParticipant,
-  findMeetingParticipant,
 } from './granola-poller/crm-client';
 import { fetchNewNotes, fetchNote } from './granola-poller/granola-client';
 import type { GranolaAttendee } from './granola-poller/types';
 
-// Emails from this domain belong to Tetris team members and should not be used
+// Emails from these domains belong to Tetris team members and should not be used
 // to link meetings to CRM people — we only want to link to external participants.
-const INTERNAL_DOMAIN = 'tetrislabs.co';
+const INTERNAL_DOMAINS = ['tetrislabs.co', 'tetristalent.co'];
 
-const isExternal = (email: string): boolean =>
-  !!email && !email.toLowerCase().endsWith(`@${INTERNAL_DOMAIN}`);
+const isExternal = (email: string): boolean => {
+  if (!email) return false;
+  const lower = email.toLowerCase();
+  return !INTERNAL_DOMAINS.some((d) => lower.endsWith(`@${d}`));
+};
 
 const granolaNoteUrl = (noteId: string): string =>
   `https://app.granola.ai/note/${noteId}`;
@@ -56,7 +57,6 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
 
           if (!note.summary_markdown) continue;
 
-          // Skip if we've already imported this Granola note
           const existing = await findMeetingByGranolaId(note.id);
           if (existing) continue;
 
@@ -64,7 +64,15 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
             note.title ||
             `Meeting - ${new Date(note.created_at).toLocaleDateString('en-US')}`;
 
-          // Resolve all external attendees — used for both company and participants
+          // If the member has a filter domain set, skip meetings with no attendee from that domain
+          if (member.granolaFilterDomain) {
+            const domain = member.granolaFilterDomain.toLowerCase().replace(/^@/, '');
+            const hasMatchingAttendee = (note.attendees ?? []).some(
+              (a: GranolaAttendee) => a.email?.toLowerCase().endsWith(`@${domain}`),
+            );
+            if (!hasMatchingAttendee) continue;
+          }
+
           const externalAttendeeEmails = (note.attendees ?? [])
             .map((a: GranolaAttendee) => a.email)
             .filter((email: string) => !!email && isExternal(email));
@@ -73,10 +81,10 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
             ? await findPeopleByEmails(externalAttendeeEmails)
             : [];
 
-          // Use first matched external attendee's company as the meeting company
+          const participantId = externalPeople[0]?.id;
           const companyId = externalPeople[0]?.companyId ?? undefined;
 
-          const meetingId = await createMeeting({
+          await createMeeting({
             name,
             bodyMarkdown: note.summary_markdown,
             granolaId: note.id,
@@ -84,24 +92,8 @@ const handler = async (_payload: CronPayload): Promise<PollResult> => {
             granolaUrl: granolaNoteUrl(note.id),
             workspaceMemberId: member.id,
             companyId,
+            participantId,
           });
-
-          // Create participant records for all matched external attendees
-          if (externalPeople.length > 0) {
-            const participants = externalPeople;
-            for (const participant of participants) {
-              try {
-                const alreadyLinked = await findMeetingParticipant(meetingId, participant.id);
-                if (!alreadyLinked) {
-                  await createMeetingParticipant(meetingId, participant.id);
-                }
-              } catch (err) {
-                errors.push(
-                  `[${memberLabel}] note ${stub.id}: participant ${participant.id}: ${String(err)}`,
-                );
-              }
-            }
-          }
 
           totalMeetings++;
         } catch (err) {

@@ -66,6 +66,7 @@ export const fetchWorkspaceMembersWithGranolaKey =
             userEmail
             granolaApiKey
             granolaLastSyncedAt
+            granolaFilterDomain
           }
         }
       }
@@ -149,6 +150,7 @@ export type CreateMeetingInput = {
   granolaUrl?: string;
   workspaceMemberId?: string;
   companyId?: string;
+  participantId?: string;
 };
 
 type CreateMeetingResponse = {
@@ -173,6 +175,7 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
   }
   if (input.workspaceMemberId) data.workspaceMemberId = input.workspaceMemberId;
   if (input.companyId) data.companyId = input.companyId;
+  if (input.participantId) data.participantId = input.participantId;
 
   const res = await gql<CreateMeetingResponse>(
     `
@@ -188,45 +191,3 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
   return res.createMeeting.id;
 };
 
-// --- Meeting Participants ---
-
-type MeetingParticipantRecord = { id: string };
-type MeetingParticipantsResponse = {
-  meetingParticipants: { edges: { node: MeetingParticipantRecord }[] };
-};
-
-export const findMeetingParticipant = async (
-  meetingId: string,
-  personId: string,
-): Promise<MeetingParticipantRecord | null> => {
-  const data = await gql<MeetingParticipantsResponse>(
-    `
-    query FindMeetingParticipant($meetingId: UUID!, $personId: UUID!) {
-      meetingParticipants(
-        filter: { meetingId: { eq: $meetingId }, personId: { eq: $personId } }
-        first: 1
-      ) {
-        edges { node { id } }
-      }
-    }
-  `,
-    { meetingId, personId },
-  );
-  return data.meetingParticipants.edges[0]?.node ?? null;
-};
-
-export const createMeetingParticipant = async (
-  meetingId: string,
-  personId: string,
-): Promise<void> => {
-  await gql(
-    `
-    mutation CreateMeetingParticipant($data: MeetingParticipantCreateInput!) {
-      createMeetingParticipant(data: $data) {
-        id
-      }
-    }
-  `,
-    { data: { meetingId, personId } },
-  );
-};

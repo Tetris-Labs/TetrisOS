@@ -52,7 +52,7 @@ export const prefillWorkflowCommandMenuItems = async (
         applicationId: applicationRow.app_id,
         workflowVersionId: QUICK_LEAD_WORKFLOW_VERSION_ID,
         frontComponentId: null,
-        engineComponentKey: null,
+        engineComponentKey: 'TRIGGER_WORKFLOW_VERSION',
         label: 'Quick Lead',
         icon: 'IconUserPlus',
         shortLabel: 'Quick Lead',
