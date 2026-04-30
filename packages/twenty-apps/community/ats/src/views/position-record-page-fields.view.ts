@@ -1,0 +1,43 @@
+import { defineView } from 'twenty-sdk';
+import {
+  VIEW_POSITION_RECORD_PAGE_ID,
+  POSITION_OBJECT_ID,
+  POSITION_NAME_FIELD_ID,
+  POSITION_DEPARTMENT_FIELD_ID,
+  POSITION_LOCATION_FIELD_ID,
+  POSITION_EMPLOYMENT_TYPE_FIELD_ID,
+  POSITION_DESCRIPTION_FIELD_ID,
+  POSITION_STATUS_FIELD_ID,
+  POSITION_OPENED_AT_FIELD_ID,
+  POSITION_CLOSED_AT_FIELD_ID,
+  POSITION_SCORING_FRAMEWORK_FIELD_ID,
+  VF_POS_PAGE_NAME,
+  VF_POS_PAGE_DEPT,
+  VF_POS_PAGE_LOCATION,
+  VF_POS_PAGE_EMPLOYMENT,
+  VF_POS_PAGE_STATUS,
+  VF_POS_PAGE_OPENED_AT,
+  VF_POS_PAGE_DESCRIPTION,
+  VF_POS_PAGE_CLOSED_AT,
+  VF_POS_PAGE_SCORING_FRAMEWORK,
+} from 'src/constants';
+
+export default defineView({
+  universalIdentifier: VIEW_POSITION_RECORD_PAGE_ID,
+  name: 'Position Record Page Fields',
+  objectUniversalIdentifier: POSITION_OBJECT_ID,
+  icon: 'IconBriefcase',
+  type: 'FIELDS_WIDGET' as never,
+  position: 0,
+  fields: [
+    { universalIdentifier: VF_POS_PAGE_NAME, fieldMetadataUniversalIdentifier: POSITION_NAME_FIELD_ID, position: 0, isVisible: true },
+    { universalIdentifier: VF_POS_PAGE_DEPT, fieldMetadataUniversalIdentifier: POSITION_DEPARTMENT_FIELD_ID, position: 1, isVisible: true },
+    { universalIdentifier: VF_POS_PAGE_LOCATION, fieldMetadataUniversalIdentifier: POSITION_LOCATION_FIELD_ID, position: 2, isVisible: true },
+    { universalIdentifier: VF_POS_PAGE_EMPLOYMENT, fieldMetadataUniversalIdentifier: POSITION_EMPLOYMENT_TYPE_FIELD_ID, position: 3, isVisible: true },
+    { universalIdentifier: VF_POS_PAGE_STATUS, fieldMetadataUniversalIdentifier: POSITION_STATUS_FIELD_ID, position: 4, isVisible: true },
+    { universalIdentifier: VF_POS_PAGE_OPENED_AT, fieldMetadataUniversalIdentifier: POSITION_OPENED_AT_FIELD_ID, position: 5, isVisible: true },
+    { universalIdentifier: VF_POS_PAGE_CLOSED_AT, fieldMetadataUniversalIdentifier: POSITION_CLOSED_AT_FIELD_ID, position: 6, isVisible: true },
+    { universalIdentifier: VF_POS_PAGE_DESCRIPTION, fieldMetadataUniversalIdentifier: POSITION_DESCRIPTION_FIELD_ID, position: 7, isVisible: true },
+    { universalIdentifier: VF_POS_PAGE_SCORING_FRAMEWORK, fieldMetadataUniversalIdentifier: POSITION_SCORING_FRAMEWORK_FIELD_ID, position: 8, isVisible: true },
+  ],
+});
