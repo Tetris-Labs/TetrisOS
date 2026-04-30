@@ -69,8 +69,8 @@ export default defineApplication({
     },
     WORKSPACE_API_KEY: {
       universalIdentifier: 'b1e2f3a4-c5d6-7890-abcd-ef1234567890',
-      description: 'Workspace API key — required to access custom fields (like task priority) that are invisible to app tokens',
-      isSecret: true,
+      description: 'Workspace API key — required to access custom fields (like task priority) that are invisible to app tokens. Must be stored with isSecret=false so the value is injected as-is into the function runtime.',
+      isSecret: false,
       value: '',
     },
   },

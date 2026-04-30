@@ -20,6 +20,13 @@ export type GranolaCalendarEvent = {
   calendar_event_id?: string;
 };
 
+export type GranolaTranscriptSegment = {
+  text: string;
+  start_time: string;
+  end_time?: string;
+  speaker?: { source?: string };
+};
+
 export type GranolaNote = {
   id: string;
   title: string;
@@ -31,6 +38,9 @@ export type GranolaNote = {
   sharing_url?: string;
   calendar_event?: GranolaCalendarEvent;
   attendees?: GranolaAttendee[];
+  // Populated only when fetchNote is called with ?include=transcript.
+  // May be null if Granola has no transcript for the note.
+  transcript?: GranolaTranscriptSegment[] | null;
 };
 
 export type GranolaNotesListResponse = {

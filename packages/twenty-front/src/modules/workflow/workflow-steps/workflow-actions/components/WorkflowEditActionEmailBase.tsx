@@ -110,30 +110,8 @@ export const WorkflowEditActionEmailBase = ({
     handleFieldChange('connectedAccountId', connectedAccountId);
   };
 
-  const filter: { or: object[] } = {
-    or: [
-      {
-        accountOwnerId: {
-          eq: currentWorkspaceMember?.id,
-        },
-      },
-    ],
-  };
-
-  if (
-    isDefined(action.settings.input.connectedAccountId) &&
-    action.settings.input.connectedAccountId !== ''
-  ) {
-    filter.or.push({
-      id: {
-        eq: action.settings.input.connectedAccountId,
-      },
-    });
-  }
-
   const { records: accounts, loading } = useFindManyRecords<ConnectedAccount>({
     objectNameSingular: 'connectedAccount',
-    filter,
     recordGqlFields: {
       id: true,
       handle: true,
@@ -148,13 +126,20 @@ export const WorkflowEditActionEmailBase = ({
     (account) => account.id === formData.connectedAccountId,
   );
 
+  const isSelectedAccountOwnedByCurrentUser =
+    isDefined(selectedAccount) &&
+    selectedAccount.accountOwnerId === currentWorkspaceMember?.id;
+
   const missingDraftScopes =
     action.type === 'DRAFT_EMAIL' && isDefined(selectedAccount)
       ? getMissingDraftEmailScopes(selectedAccount)
       : [];
 
+  // Reauthorize would re-link the inbox to whoever clicks it — only offer it
+  // when the account belongs to the current user.
   const missingScopes =
     isDefined(selectedAccount) &&
+    isSelectedAccountOwnedByCurrentUser &&
     selectedAccount.provider !== ConnectedAccountProvider.IMAP_SMTP_CALDAV &&
     missingDraftScopes.length > 0
       ? {
@@ -163,30 +148,20 @@ export const WorkflowEditActionEmailBase = ({
         }
       : null;
 
-  let emptyOption: SelectOption<string | null> = {
+  const emptyOption: SelectOption<string | null> = {
     label: t`None`,
     value: null,
   };
-  const connectedAccountOptions: SelectOption<string | null>[] = [];
-
-  accounts.forEach((account) => {
-    if (
-      account.provider === ConnectedAccountProvider.IMAP_SMTP_CALDAV &&
-      !isDefined(account.connectionParameters?.SMTP)
-    ) {
-      return;
-    }
-
-    const selectOption = {
+  const connectedAccountOptions: SelectOption<string | null>[] = accounts
+    .filter(
+      (account) =>
+        account.provider !== ConnectedAccountProvider.IMAP_SMTP_CALDAV ||
+        isDefined(account.connectionParameters?.SMTP),
+    )
+    .map((account) => ({
       label: account.handle,
       value: account.id,
-    };
-    if (account.accountOwnerId === currentWorkspaceMember?.id) {
-      connectedAccountOptions.push(selectOption);
-    } else {
-      emptyOption = selectOption;
-    }
-  });
+    }));
 
   const navigate = useNavigateSettings();
 

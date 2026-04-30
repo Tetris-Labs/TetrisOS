@@ -237,6 +237,113 @@ When building API routes or extending the application, automatically reference t
 - **Building apps** (defineEntity functions, defineRole, defineApplication, defineObject, defineField, defineLogicFunction, definePreInstallLogicFunction, definePostInstallLogicFunction, defineFrontComponent, defineSkill, defineAgent, defineView, defineNavigationMenuItem, definePageLayout, typed API clients via twenty-client-sdk, testing, CLI reference, CI): https://docs.twenty.com/developers/extend/apps/building
 - **Publishing apps** (build, deploy as tarball, share deployed app, publish to npm, marketplace metadata, installing apps): https://docs.twenty.com/developers/extend/apps/publishing
 
+### Multi-Workspace Setup
+
+This server runs two workspaces:
+
+| Workspace | Subdomain | workspaceId |
+|-----------|-----------|-------------|
+| Tetris Labs (ops) | ops | a79acd45-9d8d-42a4-b383-36371deaa6cb |
+| Hatz | hatz | 8234e383-bbbb-4c25-b102-3d18bdc99a76 |
+
+**Finding workspaces:**
+```sql
+SELECT id, "displayName", "subdomain" FROM core."workspace" ORDER BY "displayName";
+```
+
+**Finding a workspace's DB schema:**
+```sql
+-- Each workspace gets its own schema named workspace_<base62id>
+-- Easiest to identify by checking which schema has the tables you expect:
+SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE 'workspace_%';
+```
+Custom object tables are prefixed with `_` (e.g. `_jobPosition`, `_jobApplication`).
+
+**Generating an API key token for any workspace:**
+
+The twenty CLI (`~/.twenty/config.json`) stores named remotes. The `prod` remote points to ops by default. To deploy/install to a specific workspace, add a named remote for it:
+
+```python
+import json, hashlib, hmac, base64, time
+# JWT signing: secret = sha256(APP_SECRET + workspaceId + tokenType)
+# tokenType is "API_KEY"
+# See: packages/twenty-server/src/engine/core-modules/jwt/services/jwt-wrapper.service.ts
+APP_SECRET = "tetrisOS_secret_key_2026_randomstring42"  # from docker inspect twenty-server-1
+```
+
+Or use node to generate:
+```bash
+node -e "
+const crypto = require('crypto');
+const appSecret = 'tetrisOS_secret_key_2026_randomstring42';  # from: docker inspect twenty-server-1 | grep APP_SECRET
+const workspaceId = '<workspaceId>';
+const apiKeyId = '<id from core.apiKey table>';
+const type = 'API_KEY';
+const secret = crypto.createHash('sha256').update(appSecret + workspaceId + type).digest('hex');
+const header = Buffer.from(JSON.stringify({alg:'HS256',typ:'JWT'})).toString('base64url');
+const payload = Buffer.from(JSON.stringify({
+  sub: workspaceId, type, workspaceId,
+  iat: 1775760514, exp: 4929101313,  // long-lived, reuse these
+  jti: apiKeyId
+})).toString('base64url');
+const sig = crypto.createHmac('sha256', secret).update(header+'.'+payload).digest('base64url');
+console.log(header+'.'+payload+'.'+sig);
+"
+```
+
+Get `apiKeyId` with:
+```sql
+SELECT id, name FROM core."apiKey" WHERE "workspaceId" = '<workspaceId>' AND "revokedAt" IS NULL;
+```
+
+**Adding a workspace remote to the twenty CLI:**
+```python
+# Edit ~/.twenty/config.json — add to the "remotes" object:
+{
+  "remotes": {
+    "prod": { "apiUrl": "http://localhost:8080", "apiKey": "<ops-token>" },
+    "hatz": { "apiUrl": "http://localhost:8080", "apiKey": "<hatz-token>" }
+  },
+  "defaultRemote": "prod"
+}
+```
+
+Switch active remote before deploying:
+```bash
+./node_modules/.bin/twenty remote switch <remote-name>
+./node_modules/.bin/twenty deploy
+./node_modules/.bin/twenty remote switch prod  # restore default
+```
+
+**Installing an app into a specific workspace (CLI deploy → mutation pattern):**
+```bash
+# 1. Clone/install the app
+git clone <repo> packages/twenty-apps/community/<name>
+touch packages/twenty-apps/community/<name>/yarn.lock  # required for standalone yarn
+cd packages/twenty-apps/community/<name> && yarn install
+
+# 2. Add workspace remote + deploy
+./node_modules/.bin/twenty remote switch <workspace-remote>
+./node_modules/.bin/twenty deploy
+
+# 3. Get the appRegistrationId (created by deploy, scoped to workspace)
+docker exec twenty-db-1 psql -U postgres -d default -c \
+  "SELECT id FROM core.\"applicationRegistration\" WHERE \"universalIdentifier\" = '<appUniversalId>' AND \"workspaceId\" = '<workspaceId>';"
+
+# 4. Trigger install
+curl -s http://localhost:8080/metadata \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer $WORKSPACE_TOKEN" \
+  -d '{"query": "mutation { installApplication(appRegistrationId: \"<appRegistrationId>\") }"}'
+
+# 5. Restore default remote
+./node_modules/.bin/twenty remote switch prod
+```
+
+The app's `universalIdentifier` is in its `src/constants.ts` or `src/application-config.ts`.
+
+**IMPORTANT — deploy goes to whichever workspace the active remote points to.** The CLI reads `~/.twenty/config.json` — it does NOT respect `TWENTY_API_KEY` env vars. Always `remote switch` before deploying to a non-default workspace, and switch back after.
+
 ### App Deployment & Update Workflow (Tarball apps — our setup)
 
 **Deploying a new version (without uninstalling):**
@@ -249,8 +356,8 @@ curl -s http://localhost:8080/metadata \
   -H "Authorization: Bearer $API_KEY" \
   -d '{"query": "mutation { installApplication(appRegistrationId: \"<appRegistrationId>\") }"}'
 ```
-- `appRegistrationId` is in `core."applicationRegistration"` table: `SELECT id FROM core."applicationRegistration" WHERE "universalIdentifier" = '<universalIdentifier>';`
-- `API_KEY` from `core."applicationVariable"` where `key = 'WORKSPACE_API_KEY'` (or from remote config at `~/.config/twenty/config.json`)
+- `appRegistrationId` is in `core."applicationRegistration"` table: `SELECT id FROM core."applicationRegistration" WHERE "universalIdentifier" = '<universalIdentifier>' AND "workspaceId" = '<workspaceId>';`
+- `API_KEY` — generate from the `core."apiKey"` table + APP_SECRET (see Multi-Workspace Setup above)
 
 **App variables are preserved** on `installApplication` (it upserts, not recreates). Variables are only lost on `uninstallApplication` (cascade delete). Never uninstall unless you have the variable values backed up.
 

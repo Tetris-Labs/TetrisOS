@@ -26,7 +26,7 @@ export const getAvatarUrl = (
   }
 
   if (objectNameSingular === CoreObjectNameSingular.Person) {
-    return record.avatarFile?.[0]?.url ?? '';
+    return record.avatarFile?.[0]?.url ?? record.avatarUrl ?? '';
   }
 
   const imageIdentifierFieldValue = getImageIdentifierFieldValue(

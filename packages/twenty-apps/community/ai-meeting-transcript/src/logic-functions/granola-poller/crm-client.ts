@@ -77,6 +77,21 @@ export const fetchWorkspaceMembersWithGranolaKey =
       .filter((m) => !!m.granolaApiKey && m.granolaApiKey.length > 0);
   };
 
+type AllMemberEmailsResponse = {
+  workspaceMembers: { edges: { node: { userEmail: string } }[] };
+};
+
+export const fetchAllWorkspaceMemberEmails = async (): Promise<string[]> => {
+  const data = await gql<AllMemberEmailsResponse>(`
+    query FetchAllWorkspaceMemberEmails {
+      workspaceMembers { edges { node { userEmail } } }
+    }
+  `);
+  return data.workspaceMembers.edges
+    .map((e) => e.node.userEmail)
+    .filter((email): email is string => !!email);
+};
+
 export const updateGranolaLastSyncedAt = async (
   workspaceMemberId: string,
   granolaLastSyncedAt: string,
@@ -96,9 +111,22 @@ export const updateGranolaLastSyncedAt = async (
 
 // --- People / Companies ---
 
-type PersonRecord = { id: string; companyId: string | null };
+export type PersonRecord = {
+  id: string;
+  companyId: string | null;
+  companyDomain: string | null;
+};
+
 type PeopleResponse = {
-  people: { edges: { node: PersonRecord }[] };
+  people: {
+    edges: {
+      node: {
+        id: string;
+        companyId: string | null;
+        company: { domainName: { primaryLinkUrl: string | null } | null } | null;
+      };
+    }[];
+  };
 };
 
 export const findPeopleByEmails = async (emails: string[]): Promise<PersonRecord[]> => {
@@ -110,13 +138,23 @@ export const findPeopleByEmails = async (emails: string[]): Promise<PersonRecord
         filter: { emails: { primaryEmail: { in: $emails } } }
         first: 20
       ) {
-        edges { node { id companyId } }
+        edges {
+          node {
+            id
+            companyId
+            company { domainName { primaryLinkUrl } }
+          }
+        }
       }
     }
   `,
     { emails },
   );
-  return data.people.edges.map((e) => e.node);
+  return data.people.edges.map((e) => ({
+    id: e.node.id,
+    companyId: e.node.companyId,
+    companyDomain: e.node.company?.domainName?.primaryLinkUrl ?? null,
+  }));
 };
 
 // --- Meetings ---
@@ -145,11 +183,13 @@ export const findMeetingByGranolaId = async (
 export type CreateMeetingInput = {
   name: string;
   bodyMarkdown: string;
+  transcriptMarkdown?: string;
   granolaId: string;
   meetingDate?: string;
   granolaUrl?: string;
   workspaceMemberId?: string;
   companyId?: string;
+  personId?: string;
 };
 
 type CreateMeetingResponse = {
@@ -164,6 +204,9 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
     source: 'GRANOLA',
   };
 
+  if (input.transcriptMarkdown && input.transcriptMarkdown.length > 0) {
+    data.transcript = { markdown: input.transcriptMarkdown, blocknote: null };
+  }
   if (input.meetingDate) data.meetingDate = input.meetingDate;
   if (input.granolaUrl) {
     data.granolaUrl = {
@@ -174,6 +217,7 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
   }
   if (input.workspaceMemberId) data.workspaceMemberId = input.workspaceMemberId;
   if (input.companyId) data.companyId = input.companyId;
+  if (input.personId) data.personId = input.personId;
 
   const res = await gql<CreateMeetingResponse>(
     `
@@ -187,47 +231,4 @@ export const createMeeting = async (input: CreateMeetingInput): Promise<string> 
   );
 
   return res.createMeeting.id;
-};
-
-// --- Meeting Participants ---
-
-type MeetingParticipantRecord = { id: string };
-type MeetingParticipantsResponse = {
-  meetingParticipants: { edges: { node: MeetingParticipantRecord }[] };
-};
-
-export const findMeetingParticipant = async (
-  meetingId: string,
-  personId: string,
-): Promise<MeetingParticipantRecord | null> => {
-  const data = await gql<MeetingParticipantsResponse>(
-    `
-    query FindMeetingParticipant($meetingId: UUID!, $personId: UUID!) {
-      meetingParticipants(
-        filter: { meetingId: { eq: $meetingId }, personId: { eq: $personId } }
-        first: 1
-      ) {
-        edges { node { id } }
-      }
-    }
-  `,
-    { meetingId, personId },
-  );
-  return data.meetingParticipants.edges[0]?.node ?? null;
-};
-
-export const createMeetingParticipant = async (
-  meetingId: string,
-  personId: string,
-): Promise<void> => {
-  await gql(
-    `
-    mutation CreateMeetingParticipant($data: MeetingParticipantCreateInput!) {
-      createMeetingParticipant(data: $data) {
-        id
-      }
-    }
-  `,
-    { data: { meetingId, personId } },
-  );
 };

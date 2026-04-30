@@ -44,7 +44,8 @@ export const fetchNewNotes = async (
   return allNotes;
 };
 
-// Fetch a single note — includes summary_markdown and calendar_event.
+// Fetch a single note — includes summary_markdown, calendar_event, and full transcript.
+// ?include=transcript is required; without it Granola returns transcript=null.
 export const fetchNote = async (noteId: string, apiKey: string): Promise<GranolaNote> => {
-  return granolaFetch<GranolaNote>(`/notes/${noteId}`, apiKey);
+  return granolaFetch<GranolaNote>(`/notes/${noteId}?include=transcript`, apiKey);
 };
