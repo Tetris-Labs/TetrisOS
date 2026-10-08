@@ -123,7 +123,7 @@ Below are a few features we have implemented to date:
   <a href="https://e2b.dev/"><img src="./packages/twenty-website/public/images/readme/e2b.svg" height="30" alt="E2B" /></a>
 </p>
 
-  Thanks to these amazing services that we use and recommend for UI testing (Chromatic), code review (Greptile), catching bugs (Sentry) and translating (Crowdin).
+
 
 
 # Join the Community
